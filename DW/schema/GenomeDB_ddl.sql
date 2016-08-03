@@ -28,9 +28,69 @@ go
 
 /*
  * Section 1: Staging Area
- *     TBC
+ *     stage.qtl, stage.expression, stage.meta, stage.gene, stage.gwas
 */
+create schema stage;
+go
 
+-- stage.preqtl: landing table for bulk load of qtl data
+-- initial load populates (ensembl_id, snp_id, beta, tstat, pvalue)
+-- subsequent processing parses snp_id -> (chromosome, position, A1, A2)
+create table stage.qtl 
+(
+	ensembl_id nvarchar(32),
+	snp_id nvarchar(max),
+	beta float,
+	tstat float,
+	pvalue float,
+	chromosome tinyint,
+	position int,
+	A1 nvarchar(max),
+	A2 nvarchar(max)
+);
+go
+
+-- stage.expression
+--   Landing table for bulk load of GTEx expression data
+create table stage.expression
+(
+	enesmbl_id nvarchar(32),
+	gene_symbol nvarchar(32),
+	sample_id nvarchar(128),
+	rpkm float
+);
+go
+
+-- stage.meta
+--   Landing table for bulk load of GTEx sample / tissue metadata
+create table stage.meta
+(
+	sample_id nvarchar(128),
+	smts nvarchar(128),
+	smtsd nvarchar(128)
+);
+go
+
+-- stage.gene
+--   Landing table for GTEx Expression Gene information
+create table stage.gene
+(
+	ensembl_id nvarchar(32),
+	gene_symbol nvarchar(32),
+	chromosome tinyint,
+	start_pos int,
+	end_pos int,
+	gene_biotype nvarchar(32)
+);
+go
+
+-- stage.gwas  
+--   Landing table for GWAS datasets. 
+--   NEED TO CONSIDER THIS ONE WHEN I COME TO LOAD GWAS DATA
+--create table stage.gwas
+--(
+--);
+--go
 
 /*
  * Section 2: Dimension Tables
@@ -77,6 +137,11 @@ create table dbo.dim_tissue
 );
 go
 
+
+-- Do I really need these tables? 
+-- It would save space in the fact table, but then perhaps page compression will do the trick.
+-- The only possible use I can think of, is if we want an interface to extract all unique traits / populations
+-- in which case, these tables will provide a far quicker route.
 create table dbo.dim_trait
 (
 	trait_id tinyint primary key identity(1, 1),
@@ -104,9 +169,6 @@ go
  * Section 3: Fact Tables
  *     fact_gwas, fact_qtl, fact_expression
 */
-
-
-
 create table dbo.fact_gwas
 (
 	coord bigint foreign key references dbo.dim_coordinate (coord),
@@ -136,7 +198,7 @@ create table dbo.fact_qtl
 	beta float,
 	pvalue float,
 	index idx_qtl_gene clustered (gene, tissue) with (fillfactor = 95, pad_index = ON)
-);
+) WITH ( data_compression = PAGE );
 go
 
 create table dbo.fact_expression
@@ -146,7 +208,7 @@ create table dbo.fact_expression
 	dataset tinyint foreign key references dbo.dim_dataset (dataset_id),
 	rpkm float
 	index idx_expr_gene clustered (gene, tissue) with (fillfactor = 95, pad_index = ON)
-);
+) WITH ( data_compression = PAGE );
 go
 
 
