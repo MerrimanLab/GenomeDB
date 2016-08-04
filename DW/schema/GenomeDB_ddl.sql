@@ -30,12 +30,20 @@ go
  * Section 1: Staging Area
  *     stage.qtl, stage.expression, stage.meta, stage.gene, stage.gwas
 */
-create schema stage;
+if not exists (select 1 from INFORMATION_SCHEMA.SCHEMATA where schema_name = 'stage')
+	exec sp_executesql N'create schema stage';
 go
 
 -- stage.preqtl: landing table for bulk load of qtl data
 -- initial load populates (ensembl_id, snp_id, beta, tstat, pvalue)
 -- subsequent processing parses snp_id -> (chromosome, position, A1, A2)
+if not exists (
+	select 1 
+	from sys.tables as tbl
+		inner join sys.schemas as sch on sch.schema_id = tbl.schema_id
+	where tbl.name = 'qtl'
+	  and sch.name = 'stage'
+)
 create table stage.qtl 
 (
 	ensembl_id nvarchar(32),
@@ -54,6 +62,13 @@ go
 
 -- stage.expression
 --   Landing table for bulk load of GTEx expression data
+if not exists (
+	select 1 
+	from sys.tables as tbl
+		inner join sys.schemas as sch on sch.schema_id = tbl.schema_id
+	where tbl.name = 'expression'
+	  and sch.name = 'stage'
+)
 create table stage.expression
 (
 	ensembl_id nvarchar(32),
@@ -65,6 +80,13 @@ go
 
 -- stage.meta
 --   Landing table for bulk load of GTEx sample / tissue metadata
+if not exists (
+	select 1 
+	from sys.tables as tbl
+		inner join sys.schemas as sch on sch.schema_id = tbl.schema_id
+	where tbl.name = 'meta'
+	  and sch.name = 'stage'
+)
 create table stage.meta
 (
 	sample_id nvarchar(128),
@@ -75,6 +97,13 @@ go
 
 -- stage.gene
 --   Landing table for GTEx Expression Gene information
+if not exists (
+	select 1 
+	from sys.tables as tbl
+		inner join sys.schemas as sch on sch.schema_id = tbl.schema_id
+	where tbl.name = 'gene'
+	  and sch.name = 'stage'
+)
 create table stage.gene
 (
 	ensembl_id nvarchar(32),
@@ -103,6 +132,13 @@ go
 --   contains genomic coordinates {CHR, START, END, CENTER} 
 --   all positions map to human reference genome build 37
 --   this table will be one of the largest tables
+if not exists (
+	select 1 
+	from sys.tables as tbl
+		inner join sys.schemas as sch on sch.schema_id = tbl.schema_id
+	where tbl.name = 'dim_coordinate'
+	  and sch.name = 'dbo'
+)
 create table dbo.dim_coordinate
 (
     coord bigint primary key identity(1, 1),
@@ -121,6 +157,13 @@ go
 --   though it could be added to over time.
 
 -- NEED TO THINK ABOUT INDEXES
+if not exists (
+	select 1 
+	from sys.tables as tbl
+		inner join sys.schemas as sch on sch.schema_id = tbl.schema_id
+	where tbl.name = 'dim_gene'
+	  and sch.name = 'dbo'
+)
 create table dbo.dim_gene
 (
 	gene_id int primary key identity(1, 1),
@@ -131,6 +174,13 @@ create table dbo.dim_gene
 );
 go
 
+if not exists (
+	select 1 
+	from sys.tables as tbl
+		inner join sys.schemas as sch on sch.schema_id = tbl.schema_id
+	where tbl.name = 'dim_tissue'
+	  and sch.name = 'dbo'
+)
 create table dbo.dim_tissue
 (
 	tissue_id tinyint primary key identity(1, 1),
@@ -144,6 +194,13 @@ go
 -- It would save space in the fact table, but then perhaps page compression will do the trick.
 -- The only possible use I can think of, is if we want an interface to extract all unique traits / populations
 -- in which case, these tables will provide a far quicker route.
+if not exists (
+	select 1 
+	from sys.tables as tbl
+		inner join sys.schemas as sch on sch.schema_id = tbl.schema_id
+	where tbl.name = 'dim_trait'
+	  and sch.name = 'dbo'
+)
 create table dbo.dim_trait
 (
 	trait_id tinyint primary key identity(1, 1),
@@ -151,6 +208,13 @@ create table dbo.dim_trait
 );
 go
 
+if not exists (
+	select 1 
+	from sys.tables as tbl
+		inner join sys.schemas as sch on sch.schema_id = tbl.schema_id
+	where tbl.name = 'dim_population'
+	  and sch.name = 'dbo'
+)
 create table dbo.dim_population
 (
 	pop_id tinyint primary key identity(1, 1),
@@ -158,6 +222,13 @@ create table dbo.dim_population
 );
 go
 
+if not exists (
+	select 1 
+	from sys.tables as tbl
+		inner join sys.schemas as sch on sch.schema_id = tbl.schema_id
+	where tbl.name = 'dim_dataset'
+	  and sch.name = 'dbo'
+)
 create table dbo.dim_dataset
 (
 	dataset_id tinyint primary key identity(1, 1),
@@ -171,6 +242,13 @@ go
  * Section 3: Fact Tables
  *     fact_gwas, fact_qtl, fact_expression
 */
+if not exists (
+	select 1 
+	from sys.tables as tbl
+		inner join sys.schemas as sch on sch.schema_id = tbl.schema_id
+	where tbl.name = 'fact_gwas'
+	  and sch.name = 'dbo'
+)
 create table dbo.fact_gwas
 (
 	coord bigint foreign key references dbo.dim_coordinate (coord),
@@ -189,6 +267,13 @@ go
 
 
 -- NEED TO THINK ABOUT INDEXES
+if not exists (
+	select 1 
+	from sys.tables as tbl
+		inner join sys.schemas as sch on sch.schema_id = tbl.schema_id
+	where tbl.name = 'fact_qtl'
+	  and sch.name = 'dbo'
+)
 create table dbo.fact_qtl
 (
 	coord bigint foreign key references dbo.dim_coordinate (coord),
@@ -203,6 +288,13 @@ create table dbo.fact_qtl
 ) WITH ( data_compression = PAGE );
 go
 
+if not exists (
+	select 1 
+	from sys.tables as tbl
+		inner join sys.schemas as sch on sch.schema_id = tbl.schema_id
+	where tbl.name = 'fact_expression'
+	  and sch.name = 'dbo'
+)
 create table dbo.fact_expression
 (
 	gene int foreign key references dbo.dim_gene (gene_id),
