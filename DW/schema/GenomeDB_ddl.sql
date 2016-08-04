@@ -148,7 +148,8 @@ create table dbo.dim_coordinate
 	center_pos int,
 	index idx_coord_chr clustered (chromosome) with (fillfactor = 95, pad_index = on),
 	constraint uniq_coord unique (chromosome, start_pos, end_pos)
-) WITH ( data_compression=page );
+);
+-- WITH ( data_compression=page );
 go
 
 -- dim_gene
@@ -261,7 +262,8 @@ create table dbo.fact_gwas
 	pvalue float,
 	n_samples int,
 	allele_freq int
-) WITH ( data_compression = PAGE )
+);
+-- WITH ( data_compression = PAGE )
 ;
 go
 
@@ -285,7 +287,8 @@ create table dbo.fact_qtl
 	beta float,
 	pvalue float,
 	index idx_qtl_gene clustered (gene, tissue) with (fillfactor = 95, pad_index = ON)
-) WITH ( data_compression = PAGE );
+);
+-- WITH ( data_compression = PAGE );
 go
 
 if not exists (
@@ -302,7 +305,8 @@ create table dbo.fact_expression
 	dataset tinyint foreign key references dbo.dim_dataset (dataset_id),
 	rpkm float
 	index idx_expr_gene clustered (gene, tissue) with (fillfactor = 95, pad_index = ON)
-) WITH ( data_compression = PAGE );
+);
+-- WITH ( data_compression = PAGE );
 go
 
 
