@@ -46,7 +46,9 @@ create table stage.qtl
 	chromosome tinyint,
 	position int,
 	A1 nvarchar(max),
-	A2 nvarchar(max)
+	A2 nvarchar(max),
+	tissue tinyint,         -- NOTE: need to extract proper tissue and dataset ids
+	dataset tinyint         --       to pass to this table when loading
 );
 go
 
@@ -54,7 +56,7 @@ go
 --   Landing table for bulk load of GTEx expression data
 create table stage.expression
 (
-	enesmbl_id nvarchar(32),
+	ensembl_id nvarchar(32),
 	gene_symbol nvarchar(32),
 	sample_id nvarchar(128),
 	rpkm float
