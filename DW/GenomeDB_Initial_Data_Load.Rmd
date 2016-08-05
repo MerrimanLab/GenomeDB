@@ -1,0 +1,78 @@
+---
+title: "GenomeDB_Initial_Data_Load"
+author: "Nick Burns"
+date: "5 August 2016"
+output: html_document
+---
+
+# GenomeDB  
+## Initial data load  
+
+**Objective:** to load GTEx metadata (-> dim_tissue), GTEx expression data (-> fact_expression), GTEx gene summary (-> dim_coordinates, gim_gene) and GTEx QTL data (-> fact_qtl, dim_coordinate).  
+
+We should be able to do this in 6 steps:  
+
+  1. Load GTEx data into staging tables  
+  2. Manually add an entry for GTEx into dim_dataset  
+  3. From stage.meta, populate dim_tissue  
+  4. From stage.gene, populate dim_coordinate and dim_gene  
+  5. From stage.expression, populate fact_expression  
+  6. From stage.qtl, update dim_coordinate then, populate fact_qtl  
+  
+For this initial load, we will simply step through this process. In the future we will need to consider robust methods for updating data / entering new datasets. 
+
+### Step 0: setup environment  
+
+Setup ODBC connection and confirm that it is working.  
+
+```{r}
+library(RODBC)
+library(data.table)
+data_dir <- "G:\\Datasets\\GenomeDBData\\"
+
+conn <- odbcConnect("R-SQL")
+sqlQuery(conn, "use GenomeDB;")
+sqlQuery(conn, "select name from sys.tables;")
+odbcClose(conn)
+```
+
+### Step 1: populate staging area  
+
+Load gtex_metadata, gtex_genes, gtex_expression into staging areas. (QTL I will do later)
+
+```{r}
+input_files <- list(
+    meta = "gtex_metadata.csv",
+    gene = "gtex_genes.csv"
+)
+
+for (i in 1:length(input_files)) {
+    
+    start <- Sys.time()
+    table_ <- names(input_files)[i]
+    file_ <- paste0(data_dir, input_files[[i]], sep = "")
+    
+    # note: all files have headers, so -F2 will skip the header row
+    #       had to remove quotes around strings, otherwise data not imported!!!
+    cmd_ <- sprintf("bcp GenomeDB.stage.%s in %s -T -S ORBITAL\\SQLDEVBOX -c -r\\n -t, -F2",
+                    table_, file_)
+        
+    print(cmd_)
+    system(cmd_)
+    
+    print(sprintf("Loading %s took: %s", table_, Sys.time() - start))
+}
+```
+
+NOTE: unable to populate the expression staging table this way - the file is too large. BCP failed, bulk insert failed. Am currently trying SQL Server data import / export wizard. Slow - but it is inserting rows. The only concern is whether I run out of memory...
+
+### Step 2: Update dim_dataset  
+
+### Step 3: populate dim_tissue  
+
+### Step 4: unstage stage.gene into dim_coordinate and dim_gene  
+
+### Step 5: unstage stage.expression into fact_expression  
+
+### Step 6: unstage stage.qtl into dim_coordinate and fact_qtl  
+
