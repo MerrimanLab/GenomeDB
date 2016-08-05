@@ -1,0 +1,625 @@
+The execution was successful
+
+- Initializing Data Flow Task (Success)
+
+- Initializing Connections (Success)
+
+- Setting SQL Command (Success)
+
+- Setting Source Connection (Success)
+
+- Setting Destination Connection (Success)
+
+- Validating (Success)
+
+- Prepare for Execute (Success)
+
+- Pre-execute (Success)
+	Messages
+	* Information 0x402090dc: Data Flow Task 1: The processing of file "G:\Datasets\GenomeDBData\gtex_expression.csv" has started.
+	 (SQL Server Import and Export Wizard)
+	
+
+- Executing (Success)
+
+- Copying to [stage].[expression] (Success)
+	* 481800490 rows transferred
+
+	Messages
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 24 buffers were considered and 24 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 15 megabyte(s) in 5 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 16 buffers were considered and 16 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 9 megabyte(s) in 3 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 23 buffers were considered and 23 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 3 megabyte(s) in 1 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 23 buffers were considered and 23 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 9 megabyte(s) in 3 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 13 buffers were considered and 13 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 6 megabyte(s) in 2 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 24 buffers were considered and 24 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 6 megabyte(s) in 2 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 21 buffers were considered and 21 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 15 megabyte(s) in 5 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 15 buffers were considered and 15 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 12 megabyte(s) in 4 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 24 buffers were considered and 24 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 6 megabyte(s) in 2 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 21 buffers were considered and 21 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 6 megabyte(s) in 2 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 23 buffers were considered and 23 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 6 megabyte(s) in 2 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 13 buffers were considered and 13 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 3 megabyte(s) in 1 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 22 buffers were considered and 22 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 12 megabyte(s) in 4 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 24 buffers were considered and 24 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 12 megabyte(s) in 4 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 14 buffers were considered and 14 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 6 megabyte(s) in 2 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 24 buffers were considered and 24 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 9 megabyte(s) in 3 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 19 buffers were considered and 19 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 12 megabyte(s) in 4 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 14 buffers were considered and 14 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 3 megabyte(s) in 1 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 18 buffers were considered and 18 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 6 megabyte(s) in 2 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 20 buffers were considered and 20 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 12 megabyte(s) in 4 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 23 buffers were considered and 23 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 3 megabyte(s) in 1 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 14 buffers were considered and 14 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 9 megabyte(s) in 3 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 23 buffers were considered and 23 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 9 megabyte(s) in 3 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 22 buffers were considered and 22 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 21 megabyte(s) in 7 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 24 buffers were considered and 24 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 6 megabyte(s) in 2 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 24 buffers were considered and 24 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 6 megabyte(s) in 2 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 24 buffers were considered and 24 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 3 megabyte(s) in 1 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 24 buffers were considered and 24 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 9 megabyte(s) in 3 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 21 buffers were considered and 21 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 15 megabyte(s) in 5 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 23 buffers were considered and 23 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 6 megabyte(s) in 2 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 23 buffers were considered and 23 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 12 megabyte(s) in 4 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 18 buffers were considered and 18 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 3 megabyte(s) in 1 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 22 buffers were considered and 22 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 9 megabyte(s) in 3 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 22 buffers were considered and 22 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 6 megabyte(s) in 2 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 15 buffers were considered and 15 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 6 megabyte(s) in 2 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 24 buffers were considered and 24 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 12 megabyte(s) in 4 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 24 buffers were considered and 24 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 12 megabyte(s) in 4 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 16 buffers were considered and 16 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 12 megabyte(s) in 4 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 19 buffers were considered and 19 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 3 megabyte(s) in 1 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 15 buffers were considered and 15 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 12 megabyte(s) in 4 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 22 buffers were considered and 22 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 3 megabyte(s) in 1 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 23 buffers were considered and 23 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 9 megabyte(s) in 3 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 20 buffers were considered and 20 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 15 megabyte(s) in 5 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 23 buffers were considered and 23 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 9 megabyte(s) in 3 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 21 buffers were considered and 21 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 9 megabyte(s) in 3 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 18 buffers were considered and 18 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 9 megabyte(s) in 3 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 18 buffers were considered and 18 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 9 megabyte(s) in 3 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 13 buffers were considered and 13 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 9 megabyte(s) in 3 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 20 buffers were considered and 20 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 12 megabyte(s) in 4 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 20 buffers were considered and 20 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 9 megabyte(s) in 3 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 22 buffers were considered and 22 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 15 megabyte(s) in 5 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 18 buffers were considered and 18 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 9 megabyte(s) in 3 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 24 buffers were considered and 24 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 3 megabyte(s) in 1 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 23 buffers were considered and 23 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 12 megabyte(s) in 4 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 23 buffers were considered and 23 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 6 megabyte(s) in 2 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 23 buffers were considered and 23 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 3 megabyte(s) in 1 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 23 buffers were considered and 23 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 9 megabyte(s) in 3 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 15 buffers were considered and 15 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 6 megabyte(s) in 2 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 24 buffers were considered and 24 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 6 megabyte(s) in 2 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 24 buffers were considered and 24 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 6 megabyte(s) in 2 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 12 buffers were considered and 12 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 3 megabyte(s) in 1 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 20 buffers were considered and 20 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 9 megabyte(s) in 3 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 24 buffers were considered and 24 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 3 megabyte(s) in 1 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800c: Data Flow Task 1: The buffer manager detected that the system was low on virtual memory, but was unable to swap out any buffers. 16 buffers were considered and 16 were locked. Either not enough memory is available to the pipeline because not enough is installed, other processes are using it, or too many buffers are locked.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004800f: Data Flow Task 1: Buffer manager allocated 12 megabyte(s) in 4 physical buffer(s).
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x40048010: Data Flow Task 1: Component "Source - gtex_expression_csv" (1) owns 3 megabyte(s) physical buffer.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x402090de: Data Flow Task 1: The total number of data rows processed for file "G:\Datasets\GenomeDBData\gtex_expression.csv" is 481800491.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x402090df: Data Flow Task 1: The final commit for the data insertion in "Destination - expression" has started.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x402090e0: Data Flow Task 1: The final commit for the data insertion  in "Destination - expression" has ended.
+	 (SQL Server Import and Export Wizard)
+	
+
+- Post-execute (Success)
+	Messages
+	* Information 0x402090dd: Data Flow Task 1: The processing of file "G:\Datasets\GenomeDBData\gtex_expression.csv" has ended.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004300b: Data Flow Task 1: "Destination - expression" wrote 481800490 rows.
+	 (SQL Server Import and Export Wizard)
+	
+
+
+
