@@ -20,6 +20,7 @@
  * Created: 3 August, 2016
  * Edits:
  *    3 August, 2016: created script, table DDL created. Nick Burns.
+ *    8 August, 2016: updated all identity columns to INT type (tinyint resulted in arithmetic overflow on insert)
  *
 */
 USE [GenomeDB]
@@ -132,13 +133,13 @@ go
 --   contains genomic coordinates {CHR, START, END, CENTER} 
 --   all positions map to human reference genome build 37
 --   this table will be one of the largest tables
-if not exists (
+if exists (
 	select 1 
 	from sys.tables as tbl
 		inner join sys.schemas as sch on sch.schema_id = tbl.schema_id
 	where tbl.name = 'dim_coordinate'
 	  and sch.name = 'dbo'
-)
+) drop table dbo.dim_coordinate;
 create table dbo.dim_coordinate
 (
     coord bigint primary key identity(1, 1),
@@ -158,13 +159,13 @@ go
 --   though it could be added to over time.
 
 -- NEED TO THINK ABOUT INDEXES
-if not exists (
+if exists (
 	select 1 
 	from sys.tables as tbl
 		inner join sys.schemas as sch on sch.schema_id = tbl.schema_id
 	where tbl.name = 'dim_gene'
 	  and sch.name = 'dbo'
-)
+) drop table dbo.dim_gene;
 create table dbo.dim_gene
 (
 	gene_id int primary key identity(1, 1),
@@ -175,64 +176,63 @@ create table dbo.dim_gene
 );
 go
 
-if not exists (
+if exists (
 	select 1 
 	from sys.tables as tbl
 		inner join sys.schemas as sch on sch.schema_id = tbl.schema_id
 	where tbl.name = 'dim_tissue'
 	  and sch.name = 'dbo'
-)
+) drop table dbo.dim_tissue;
 create table dbo.dim_tissue
 (
-	tissue_id tinyint primary key identity(1, 1),
+	tissue_id int primary key identity(1, 1),
 	smts nvarchar(128),
 	smtsd nvarchar(128)
 );
 go
 
-
 -- Do I really need these tables? 
 -- It would save space in the fact table, but then perhaps page compression will do the trick.
 -- The only possible use I can think of, is if we want an interface to extract all unique traits / populations
 -- in which case, these tables will provide a far quicker route.
-if not exists (
+if exists (
 	select 1 
 	from sys.tables as tbl
 		inner join sys.schemas as sch on sch.schema_id = tbl.schema_id
 	where tbl.name = 'dim_trait'
 	  and sch.name = 'dbo'
-)
+) drop table dbo.dim_trait;
 create table dbo.dim_trait
 (
-	trait_id tinyint primary key identity(1, 1),
+	trait_id int primary key identity(1, 1),
 	trait nvarchar(32) not null,    -- e.g. BMI
 );
 go
 
-if not exists (
+if exists (
 	select 1 
 	from sys.tables as tbl
 		inner join sys.schemas as sch on sch.schema_id = tbl.schema_id
 	where tbl.name = 'dim_population'
 	  and sch.name = 'dbo'
-)
+) drop table dbo.dim_population;
 create table dbo.dim_population
 (
-	pop_id tinyint primary key identity(1, 1),
+	pop_id int primary key identity(1, 1),
 	pop nvarchar(32) not null
 );
 go
 
-if not exists (
+if exists (
 	select 1 
 	from sys.tables as tbl
 		inner join sys.schemas as sch on sch.schema_id = tbl.schema_id
 	where tbl.name = 'dim_dataset'
 	  and sch.name = 'dbo'
-)
+) drop table dbo.dim_dataset;
 create table dbo.dim_dataset
 (
-	dataset_id tinyint primary key identity(1, 1),
+	dataset_id int primary key identity(1, 1),
 	dataset_name nvarchar(32) not null,
 	dataset_description nvarchar(256)
 );
@@ -243,19 +243,19 @@ go
  * Section 3: Fact Tables
  *     fact_gwas, fact_qtl, fact_expression
 */
-if not exists (
+if exists (
 	select 1 
 	from sys.tables as tbl
 		inner join sys.schemas as sch on sch.schema_id = tbl.schema_id
 	where tbl.name = 'fact_gwas'
 	  and sch.name = 'dbo'
-)
+) drop table dbo.fact_gwas;
 create table dbo.fact_gwas
 (
 	coord bigint foreign key references dbo.dim_coordinate (coord),
-	trait tinyint foreign key references dbo.dim_trait (trait_id),
-	pop tinyint foreign key references dbo.dim_population (pop_id),
-	dataset tinyint foreign key references dbo.dim_dataset (dataset_id),
+	trait int foreign key references dbo.dim_trait (trait_id),
+	pop int foreign key references dbo.dim_population (pop_id),
+	dataset int foreign key references dbo.dim_dataset (dataset_id),
 	A1 nvarchar(max),
 	A2 nvarchar(max),
 	beta float,
@@ -269,19 +269,19 @@ go
 
 
 -- NEED TO THINK ABOUT INDEXES
-if not exists (
+if exists (
 	select 1 
 	from sys.tables as tbl
 		inner join sys.schemas as sch on sch.schema_id = tbl.schema_id
 	where tbl.name = 'fact_qtl'
 	  and sch.name = 'dbo'
-)
+) drop table dbo.fact_qtl;
 create table dbo.fact_qtl
 (
 	coord bigint foreign key references dbo.dim_coordinate (coord),
 	gene int foreign key references dbo.dim_gene (gene_id),
-	tissue tinyint foreign key references dbo.dim_tissue (tissue_id),
-	dataset tinyint foreign key references dbo.dim_dataset (dataset_id),
+	tissue int foreign key references dbo.dim_tissue (tissue_id),
+	dataset int foreign key references dbo.dim_dataset (dataset_id),
 	A1 nvarchar(max),
 	A2 nvarchar(max),
 	beta float,
@@ -291,18 +291,18 @@ create table dbo.fact_qtl
 -- WITH ( data_compression = PAGE );
 go
 
-if not exists (
+if exists (
 	select 1 
 	from sys.tables as tbl
 		inner join sys.schemas as sch on sch.schema_id = tbl.schema_id
 	where tbl.name = 'fact_expression'
 	  and sch.name = 'dbo'
-)
+) drop table dbo.fact_expression;
 create table dbo.fact_expression
 (
 	gene int foreign key references dbo.dim_gene (gene_id),
-	tissue tinyint foreign key references dbo.dim_tissue (tissue_id),
-	dataset tinyint foreign key references dbo.dim_dataset (dataset_id),
+	tissue int foreign key references dbo.dim_tissue (tissue_id),
+	dataset int foreign key references dbo.dim_dataset (dataset_id),
 	rpkm float
 	index idx_expr_gene clustered (gene, tissue) with (fillfactor = 95, pad_index = ON)
 );
