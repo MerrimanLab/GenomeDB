@@ -22,9 +22,11 @@ go
 -- dim_tissue
 -- Unstage stage.meta
 begin tran
+delete from dim_tissue;
 
 insert into dim_tissue (smts, smtsd)
-select smts, smtsd from stage.meta;
+select distinct smts, smtsd from stage.meta
+where smts is not null;
 go
 
 --   commit    rollback
