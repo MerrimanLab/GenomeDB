@@ -22,7 +22,7 @@ go
 -- dim_tissue
 -- Unstage stage.meta
 begin tran
-delete from dim_tissue;
+select * from dim_tissue;
 
 insert into dim_tissue (smts, smtsd)
 select distinct smts, smtsd from stage.meta
@@ -30,6 +30,18 @@ where smts is not null;
 go
 
 --   commit    rollback
+
+-- update stage.meta
+begin tran
+update stage.meta
+set smts = 'Esophagus' where smts is null and smtsd = 'Esophagus - Mucosa';
+update stage.meta
+set smts = 'Skin' where smts is null and smtsd = 'Skin - Sun Exposed (Lower leg)';
+update stage.meta
+set smts = 'Stomach' where smts is null and smtsd = 'Stomach';
+delete from stage.meta where smts is null and smtsd is null;
+
+--    commit    rollback
 
 -- dim_coordinate
 -- populate dim_coordinate from stage.gene
