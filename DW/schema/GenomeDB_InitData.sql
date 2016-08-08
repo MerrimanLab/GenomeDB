@@ -67,3 +67,20 @@ from stage.gene as S
 
 -- dim_expression
 -- unstage stage.expression into fact_expression
+/*
+ * ETL Expression data
+ * The sample_id from stage.expression links to the sample_id in stage.meta
+ * from this we can get the appropriate (smts, smtsd) values, join to dim_tissue
+ * and populate fact_expression
+*/
+
+begin tran
+
+insert into dbo.fact_expression (gene, tissue, dataset, rpkm)
+select G.gene_id, T.tissue_id, 1, E.rpkm
+from stage.expression E
+	inner join dim_gene G on G.gene_symbol = E.gene_symbol
+	inner join stage.meta M on M.sample_id = E.sample_id
+	inner join dim_tissue T on T.smts = M.smts and T.smtsd = M.smtsd;
+
+--    commit    rollback
