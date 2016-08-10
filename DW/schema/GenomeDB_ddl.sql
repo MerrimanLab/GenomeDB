@@ -287,11 +287,13 @@ create table dbo.fact_qtl
 	A1 nvarchar(max),
 	A2 nvarchar(max),
 	beta float,
-	pvalue float,
-	index idx_qtl_gene clustered (gene, tissue) with (fillfactor = 95, pad_index = ON)
+	pvalue float--,
+	--index idx_qtl_gene clustered (gene, tissue) with (fillfactor = 95, pad_index = ON)
 );
 -- WITH ( data_compression = PAGE );
 go
+-- note removed clustered index as it slowed down bulk inserts
+-- this means I will have to pay A LOT of attention to appropriate indexing for queries.
 
 if exists (
 	select 1 

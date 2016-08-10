@@ -91,9 +91,10 @@ map_tissue <- function(suffix, db = dim_tissue) {
     return (db[idx, "tissue_id"])
 }
 reset_staging <- function (conn) {
-    sqlQuery(conn, "truncate table stage.qtl;")
+    sqlQuery(conn, "truncate table GenomeDB.stage.qtl;")
 }
 bulk_load <- function (qtl_file) {
+    
     cmd_ <- sprintf("bcp GenomeDB.stage.qtl in %s -T -S ORBITAL\\SQLDEVBOX -c -r\\n -t\\t -b 100000",
                     qtl_file)
     system(cmd_)
@@ -131,7 +132,7 @@ dim_tissue <- sqlQuery(conn, "select *, LEFT(smtsd, 18) as 'stub' from GenomeDB.
 dim_tissue$stub <- gsub(" - ", " ", dim_tissue$stub)
 odbcClose(conn)
 
-for (qtl_ in qtl_files[4]) {
+for (qtl_ in qtl_files) {
     
     print(sprintf("--------    %s    --------", qtl_))
     print("")
@@ -145,7 +146,9 @@ for (qtl_ in qtl_files[4]) {
     # load qtl data
     conn <- odbcConnect("R-SQL")
     reset_staging(conn)
+
     bulk_load(paste0(getwd(), "/", qtl_, sep = ""))
+
     unstage(conn, tissue_id, 1)
     odbcClose(conn)
     

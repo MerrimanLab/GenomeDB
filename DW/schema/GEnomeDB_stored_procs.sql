@@ -75,20 +75,25 @@ if exists (select 1 from sys.objects where type = 'P' and name = 'unstage_qtl')
 	drop procedure dbo.unstage_qtl;
 go
 create procedure dbo.unstage_qtl
+	@tissue int,
+	@datasource int
 AS
 BEGIN
-	insert into dbo.fact_qtl
+
+    begin tran;
+	insert into dbo.fact_qtl with (tablockx)
 	select
 		G.coord,
 		G.gene_id,
-		Q.tissue,
-		Q.dataset,
+		@tissue,
+		@datasource,
 		Q.A1,
 		Q.A2,
 		Q.beta,
 		Q.pvalue
 	from stage.qtl as Q
-		inner join dbo.dim_gene as G on g.ensembl_id = Q.ensembl_id
+		inner join dbo.dim_gene as G on g.ensembl_id = Q.ensembl_id;
+	commit;
 END;
 go
 
