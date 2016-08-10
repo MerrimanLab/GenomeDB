@@ -35,31 +35,33 @@ if not exists (select 1 from INFORMATION_SCHEMA.SCHEMATA where schema_name = 'st
 	exec sp_executesql N'create schema stage';
 go
 
--- stage.preqtl: landing table for bulk load of qtl data
--- initial load populates (ensembl_id, snp_id, beta, tstat, pvalue)
--- subsequent processing parses snp_id -> (chromosome, position, A1, A2)
-if not exists (
+-- stage.qtl: landing table for bulk load of qtl data
+-- due to a lack of native string split fx in SQL Server (pre 2016)
+-- qtl has been pre-parsed using command line tools
+if exists (
 	select 1 
 	from sys.tables as tbl
 		inner join sys.schemas as sch on sch.schema_id = tbl.schema_id
 	where tbl.name = 'qtl'
 	  and sch.name = 'stage'
-)
+) drop table stage.qtl;
 create table stage.qtl 
 (
 	ensembl_id nvarchar(32),
-	snp_id nvarchar(max),
-	beta float,
-	tstat float,
-	pvalue float,
 	chromosome tinyint,
 	position int,
 	A1 nvarchar(max),
 	A2 nvarchar(max),
-	tissue tinyint,         -- NOTE: need to extract proper tissue and dataset ids
-	dataset tinyint         --       to pass to this table when loading
+	genome_build char(3),
+	beta float,
+	tstat float,
+	pvalue float
 );
 go
+-- index for unstaging into fact_qtl
+create clustered index idx_qtl_ens on stage.qtl (ensembl_id);
+go
+
 
 -- stage.expression
 --   Landing table for bulk load of GTEx expression data

@@ -51,19 +51,23 @@ if exists (select 1 from sys.objects where type = 'P' and name = 'sproc_parse_qt
 	drop procedure dbo.sproc_parse_qtl;
 go
 create procedure dbo.sproc_parse_qtl
-	@tissue tinyint,
-	@datasource tinyint
+	@tissue int,
+	@datasource int
 AS
 BEGIN
-	update stage.qtl
-	set
-		ensembl_id = dbo.udf_parse(ensembl_id, '.', 1),
-		chromosome = dbo.udf_parse(snp_id, '_', 1),           
-		position = dbo.udf_parse(snp_id, '_', 2),
-		A1 = dbo.udf_parse(snp_id, '_', 3),
-		A2 = dbo.udf_parse(snp_id, '_', 4),
+	insert into stage.qtl (ensembl_id, chromosome, position, A1, A2, tissue, dataset, beta, tstat, pvalue)
+	select
+		dbo.udf_parse(ensembl_id, '.', 1),
+		dbo.udf_parse(snp_id, '_', 1),           
+		dbo.udf_parse(snp_id, '_', 2),
+		dbo.udf_parse(snp_id, '_', 3),
+		dbo.udf_parse(snp_id, '_', 4),
 		tissue = @tissue,
-		dataset = @datasource;
+		dataset = @datasource,
+		beta, 
+		tstat,
+		pvalue
+	from stage.preqtl;
 END;
 go
 
