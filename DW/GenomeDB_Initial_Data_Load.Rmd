@@ -128,11 +128,12 @@ qtl_files <- list.files(".", pattern = qtl_file_pattern)
 
 conn <- odbcConnect("R-SQL")
 sqlQuery(conn, "use GenomeDB;")
-dim_tissue <- sqlQuery(conn, "select *, LEFT(smtsd, 18) as 'stub' from GenomeDB.dbo.dim_tissue;")
+dim_tissue <- sqlQuery(conn, "select *, LEFT(smtsd, 20) as 'stub' from GenomeDB.dbo.dim_tissue;")
 dim_tissue$stub <- gsub(" - ", " ", dim_tissue$stub)
+dim_tissue$stub <- gsub(" \\(", " ", dim_tissue$stub)
 odbcClose(conn)
 
-for (qtl_ in qtl_files) {
+for (qtl_ in qtl_files[9:44]) {
     
     print(sprintf("--------    %s    --------", qtl_))
     print("")

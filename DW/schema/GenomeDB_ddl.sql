@@ -177,6 +177,7 @@ create table dbo.dim_gene
 	gene_biotype nvarchar(32)
 );
 go
+-- create nonclustered index idx_gene on dim_gene (gene_symbol, gene_id);
 
 if exists (
 	select 1 
@@ -294,6 +295,7 @@ create table dbo.fact_qtl
 go
 -- note removed clustered index as it slowed down bulk inserts
 -- this means I will have to pay A LOT of attention to appropriate indexing for queries.
+-- create nonclustered index idx_qtl_gene on dbo.fact_qtl (gene, tissue);
 
 if exists (
 	select 1 
