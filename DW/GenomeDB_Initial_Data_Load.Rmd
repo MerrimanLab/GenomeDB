@@ -161,3 +161,14 @@ for (qtl_ in qtl_files[9:44]) {
 }
 
 ```
+
+
+### GWAS data  
+
+For now, I have decided to load this manually using SQL Server Data Import / Export tool. I just want to get this data in, then I can iterate on this and figure out how to possibly streamline it. Loading the following data initially:
+
+  - Kottgen (urate and gout)  
+  - Locke and Shungin obesity  
+  - Diagram consortium's diabetes  
+  - Tanya's T2D  
+  
