@@ -19,84 +19,103 @@ browser_init <- function () {
     )
 }
 
+# nav_path()
+# returns an integer value (1..6) based on the combination of
+# datasets in input$opt_dataset. This will then be used to control
+# the reactive responses to events. Put into function to simplify
+# other functions.
+nav_path <- function (from_datasets) {
+    # 1: QTL only
+    # 2: Own dataset only
+    # 3: GWAS onty
+    # 4: QTL + GWAS
+    # 5: QTL + OWN
+    # 6: GWAS + OWN
+    branch_ <- if (all(grepl("qtl", from_datasets, ignore.case = TRUE))) 1
+               else if (all(grepl("own", from_datasets, ignore.case = TRUE))) 2
+               else if (all(grepl("gwas", from_datasets, ignore.case = TRUE))) 3
+               else if (any(grepl("qtl", from_datasets, ignore.case = TRUE))) {
+                   if (any(grepl("gwas", from_datasets, ignore.case = TRUE))) 4
+                   else 5
+               } else 6
+    
+    return (branch_)
+}
 # user_filters()
 # based on user input (QTL, GWAS, own dataset), populate appropriate
 # filter UI elements.
 user_filters <- function (from_datasets, tissues = info_tissues, traits = info_traits) {
     
-    # GREPL below will broadcast over all items in from_datasets
-    # The UI filters will change based on the 'combination' of datasets.
-    # The first 3 conditions below test for one dataset only
-    # The else condition is to assume a combination of datasets
-    if (all(grepl("qtl", from_datasets, ignore.case = TRUE))) {
+    # Set UI filters based on the user-selected datasets in from_datasets
+    # datasets may be a combination of QTL, GWAS, OWN with appropriate filters then created.
+    branch_ <- nav_path(from_datasets)
+    filter_ <- if (branch_ == 1) {
         
-        filter_ <-  shiny::tags$div(
+        shiny::tags$div(
             
             shiny::textInput("by_gene", label = "Gene:", placeholder = "example: ABCG2"),
-            shiny::selectizeInput("filter_by", label = "Tissue(s):",
+            shiny::selectizeInput("by_tissue", label = "Tissue(s):",
                                   choices = c("All tissues", "Top 8 tissues", tissues$smtsd), 
                                   multiple = TRUE)
         )
         
     # own dataset: upload dataset
-    } else if (all(grepl("own", from_datasets, ignore.case = TRUE))) {
-        filter_ <- shiny::tags$div(
+    } else if (branch_ == 2) {
+        
+        shiny::tags$div(
             
             shiny::fileInput("file_input", 
                              p("Input data file:", class = "boldtext")),
-            shiny::selectizeInput("filter_by", label = "Search by:",
+            shiny::selectizeInput("by_custom", label = "Search by:",
                                   choices = c("SNP (rsid)", "Gene", "Region (chr, start, end)"))   
         )
         
     # GWAS data
-    } else if (all(grepl("gwas", from_datasets, ignore.case = TRUE)))  {
-        filter_ <- shiny::tags$div(
+    } else if (branch_ == 3)  {
+        
+        shiny::tags$div(
             
             shiny::selectizeInput("by_trait", label = "Trait:",
                                   choices = traits$trait),
-            shiny::selectizeInput("filter_by", label = "Search by:",
+            shiny::selectizeInput("by_custom", label = "Search by:",
                                   choices = c("SNP (rsid)", "Gene", "Region (chr, start, end)"))  
         )
         
-    # else if QTL and any other combination, search by gene only
-    } else if (any(grepl("qtl", from_datasets, ignore.case = TRUE))) {
-        
-        # if QTL + GWAS: filters = gene, tissue, trait
-        if (any(grepl("gwas", from_datasets, ignore.case = TRUE))) {
+    # QTL + GWAS
+    } else if (branch_ == 4) {
             
-            filter_ <-  shiny::tags$div(
-                
-                shiny::textInput("by_gene", label = "Gene:", placeholder = "example: ABCG2"),
-                shiny::selectizeInput("filter_by", label = "Tissue(s):",
-                                      choices = c("All tissues", "Top 8 tissues", tissues$smtsd), 
-                                      multiple = TRUE),
-                shiny::selectizeInput("by_trait", label = "Trait:",
-                                      choices = traits$trait)
-            )
+        shiny::tags$div(
             
-        # if QTL + own: filters = gene, tissue
-        } else {
+            shiny::textInput("by_gene", label = "Gene:", placeholder = "example: ABCG2"),
+            shiny::selectizeInput("by_tissue", label = "Tissue(s):",
+                                  choices = c("All tissues", "Top 8 tissues", tissues$smtsd), 
+                                  multiple = TRUE),
+            shiny::selectizeInput("by_trait", label = "Trait:",
+                                  choices = traits$trait)
+        )
+    
+    # QTL + OWN
+    } else if (branch_ == 5) {
             
-            filter_ <-  shiny::tags$div(
+            shiny::tags$div(
                 
                 shiny::fileInput("file_input", 
                                  p("Input data file:", class = "boldtext")),
                 shiny::textInput("by_gene", label = "Gene:", placeholder = "example: ABCG2"),
-                shiny::selectizeInput("filter_by", label = "Tissue(s):",
+                shiny::selectizeInput("by_tissue", label = "Tissue(s):",
                                       choices = c("All tissues", "Top 8 tissues", tissues$smtsd), 
                                       multiple = TRUE)
             )
-        }
-    # else GWAS + own: filters = trait, search by (snp, gene, region)
+    # GWAS + OWN
     } else {
         
-        filter_ <-  shiny::tags$div(
+        shiny::tags$div(
             
             shiny::fileInput("file_input", 
                              p("Input data file:", class = "boldtext")),
             shiny::selectizeInput("by_trait", label = "Trait:",
                                   choices = traits$trait),
-            shiny::selectizeInput("filter_by", label = "Search by:",
+            shiny::selectizeInput("by_custom", label = "Search by:",
                                   choices = c("SNP (rsid)", "Gene", "Region (chr, start, end)"))
         )
     }

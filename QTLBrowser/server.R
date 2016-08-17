@@ -23,22 +23,23 @@ shinyServer(function(input, output) {
     db <- database()
     
     # get tissue information for lookup / filters etc.
-    info_tissues <- lookup_dim(db, table = "dim_tissue", test = TRUE)
+    #info_tissues <- lookup_dim(db, table = "dim_tissue", test = TRUE)
     #info_traits <- lookup_dim(db, table = "dim_trait")
+    info_tissues <- data.table(tissue_id = c(1, 2, 3, 4, 5),
+               smts = c("Blood", "Brain", "Adipose", "Liver", 'Stomach'),
+               smtsd = c("Blood", "Brain", "Adipose", "Liver", 'Stomach'))
     info_traits <- data.table(id = 1:3, trait = c("Diabetes", "Gout", "Urate"))
     
-    # The CONTINUE button is the main navigation control
-    # a lot of the visible UI controls are set based on the
-    # state controlled by the CONTINUE button
+    # The CONTINUE button is the main navigation control. It increments a counter variable
+    # which will then trigger the correct response based on the IF...ELSE conditions below.
     observeEvent(input$btn_continue, {
         browser$forward()
         
-        # this is logic that should really go into browser_logic
-        # likely to return UI elements for rendering
         if (browser$get() == 1) {
             output$ui_filters <- renderUI(user_filters(input$opt_dataset, tissues = info_tissues, traits = info_traits))
         } else {
             print(sprintf("browser state:  %s", browser$get()))
+            
         }
     })
 })
