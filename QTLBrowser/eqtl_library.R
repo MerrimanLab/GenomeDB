@@ -1,7 +1,7 @@
 # GenomeDB QTL Browser
-# eqtl_library.R
+# browser_library.R
 #
-# Logic code for QTL Browser, connection to SQL Server.
+# Logic code for the GenomeDB Browser.
 #
 # Nick Burns
 # August 2016
