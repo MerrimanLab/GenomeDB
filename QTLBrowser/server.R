@@ -21,4 +21,19 @@ shinyServer(function(input, output) {
     
     browser <- browser_init()
     db <- database()
+    
+    # The CONTINUE button is the main navigation control
+    # a lot of the visible UI controls are set based on the
+    # state controlled by the CONTINUE button
+    observeEvent(input$btn_continue, {
+        browser$forward()
+        
+        # this is logic that should really go into browser_logic
+        # likely to return UI elements for rendering
+        if (browser$get() == 1) {
+            output$ui_filters <- renderUI(user_filters(input$opt_dataset))
+        } else {
+            print(sprintf("browser state:  %s", browser$get()))
+        }
+    })
 })

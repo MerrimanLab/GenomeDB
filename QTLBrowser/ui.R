@@ -30,6 +30,9 @@ shinyUI(fluidPage(
         # specific controls
         # controls for browsing gwas / qtl
         # should be displayed on response to question above
+        uiOutput("ui_filters"),
+        
+        
         hr(),
         br(),
         actionButton("btn_continue", label = "Continue", class = "button"),

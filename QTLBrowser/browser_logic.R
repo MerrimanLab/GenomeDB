@@ -18,3 +18,29 @@ browser_init <- function () {
         get = function () stage
     )
 }
+
+user_filters <- function (from_datasets) {
+    if (grepl("QTL", from_datasets, ignore.case = TRUE)) {
+        filter_ <-  shiny::tags$div(
+            shiny::tags$p("FILTERS", class = "bold_text"),
+            br(),
+            shiny::tags$p("Enter a gene name:", class = "standard_text"),
+            shiny::textInput("txt_gene", label = "", placeholder = "example: ABCG2"),
+            p("SElect a tissue:", class = "sandard_text"),
+            shiny::selectizeInput("by_tissue", label = "",
+                                  choices = c("ALL", "Liver", "Brain", "Adipose"), multiple = TRUE)
+        )
+    } else if (grepl("own", from_datasets, ignore.case = TRUE)) {
+        filter_ <- shiny::tags$div(
+            shiny::tags$p("You want to look at your own data."),
+            shiny::textInput("txt_owndata", label = "")    
+        )
+    } else {
+        filter_ <- shiny::tags$div(
+            shiny::tags$p("You want to look at GWAS data"),
+            shiny::textInput("txt_owndata", label = "")
+        )
+    }
+    
+    return (filter_)
+}
