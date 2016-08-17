@@ -27,3 +27,26 @@ database <- function () {
         query_ = function (query) {RODBC::sqlQuery(conn, query)}
     )
 }
+
+# get_tissues()
+# Get dim_tissue from the database, used for populating UI controls in the browser
+# Parameters:
+# -----------
+#   db: an instance of the database() function 
+#
+# Returns:
+# --------
+#   info_tissues: data.table (tissue_id, smts, smtsd)  (i.e. GTEx tissue metadata)
+lookup_dim <- function (db, table = "dim_tissue", test = FALSE) {
+    
+    if (test) {
+        info <- data.table(tissue_id = c(1, 2, 3, 4, 5),
+                                   smts = c("Blood", "Brain", "Adipose", "Liver", 'Stomach'),
+                                   smtsd = c("Blood", "Brain", "Adipose", "Liver", 'Stomach'))
+    } else {
+        db$connect_()
+        info <- db$query_(sprintf("select * from %s;", table))
+        db$disconnect_()
+    }
+    return (info)
+}

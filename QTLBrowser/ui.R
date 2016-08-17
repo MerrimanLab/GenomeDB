@@ -20,11 +20,12 @@ shinyUI(fluidPage(
         # Browse gwas / qtl / own dataset(?)
         # initial choice for user, this should guide the next set of controls
         p("Select a dataset, or a combination of datasets, to browse below...",
-          class = "standard_text"),
+          class = "standardtext"),
         selectizeInput("opt_dataset", label = "", 
                        choices = c("GWAS", "QTLs & Expression", "I have my own dataset..."),
                        multiple = TRUE),
         br(),
+        hr(),
         
         
         # specific controls
