@@ -31,7 +31,7 @@ nav_path <- function (from_datasets) {
     # 4: QTL + GWAS
     # 5: QTL + OWN
     # 6: GWAS + OWN
-    branch_ <- if (all(grepl("qtl", from_datasets, ignore.case = TRUE))) 1
+    branch <- if (all(grepl("qtl", from_datasets, ignore.case = TRUE))) 1
                else if (all(grepl("own", from_datasets, ignore.case = TRUE))) 2
                else if (all(grepl("gwas", from_datasets, ignore.case = TRUE))) 3
                else if (any(grepl("qtl", from_datasets, ignore.case = TRUE))) {
@@ -39,17 +39,17 @@ nav_path <- function (from_datasets) {
                    else 5
                } else 6
     
-    return (branch_)
+    return (branch)
 }
 # user_filters()
 # based on user input (QTL, GWAS, own dataset), populate appropriate
 # filter UI elements.
-user_filters <- function (from_datasets, tissues = info_tissues, traits = info_traits) {
+user_filters <- function (input, tissues = info_tissues, traits = info_traits) {
     
     # Set UI filters based on the user-selected datasets in from_datasets
     # datasets may be a combination of QTL, GWAS, OWN with appropriate filters then created.
-    branch_ <- nav_path(from_datasets)
-    filter_ <- if (branch_ == 1) {
+    branch <- nav_path(input$opt_dataset)
+    filter_ <- if (branch == 1) {
         
         shiny::tags$div(
             
@@ -60,7 +60,7 @@ user_filters <- function (from_datasets, tissues = info_tissues, traits = info_t
         )
         
     # own dataset: upload dataset
-    } else if (branch_ == 2) {
+    } else if (branch == 2) {
         
         shiny::tags$div(
             
@@ -71,7 +71,7 @@ user_filters <- function (from_datasets, tissues = info_tissues, traits = info_t
         )
         
     # GWAS data
-    } else if (branch_ == 3)  {
+    } else if (branch == 3)  {
         
         shiny::tags$div(
             
@@ -82,7 +82,7 @@ user_filters <- function (from_datasets, tissues = info_tissues, traits = info_t
         )
         
     # QTL + GWAS
-    } else if (branch_ == 4) {
+    } else if (branch == 4) {
             
         shiny::tags$div(
             
@@ -95,7 +95,7 @@ user_filters <- function (from_datasets, tissues = info_tissues, traits = info_t
         )
     
     # QTL + OWN
-    } else if (branch_ == 5) {
+    } else if (branch == 5) {
             
             shiny::tags$div(
                 
@@ -122,3 +122,53 @@ user_filters <- function (from_datasets, tissues = info_tissues, traits = info_t
     
     return (filter_)
 }
+
+# get filter parameters from UI controls
+parameters_ <- function () {
+    params_ <- list()
+    
+    list(
+        sweep = function (input) {
+            params_ <<- list(
+                gene = input$by_gene,
+                tissue = input$by_tissue,
+                trait = input$by_trait,
+                snp = input$by_snp,
+                region = input$by_region,
+                file_input = input$file_input$filepath
+            )
+        },
+        get = function (parameter) params_[[parameter]],
+        set = function (parameter, value) params_[[parameter]] <<- value
+    )
+}
+
+# confirm_filters()
+# This is a little yuck, but asks to either a) confirm the filters already entered,
+# or b), if GWAS or OWN data, then need to ask for SNP, Gene or Region to filter by
+confirm_filters <- function (from_dataset, params, branch) {
+    
+    ui_confirm <- if (branch %in% c(1, 4, 5)) {
+        
+        shiny::tags$div(
+            shiny::tags$p("The following filters have been set:"),
+            br(),
+            p(sprintf("Gene:  %s", ifelse(is.null(params$get("gene")), "NIL", params$get("gene")))),
+            p(sprintf("Tissue:  %s", ifelse(is.null(params$get("tissue")), "NIL", params$get("tissue")))),
+            p(sprintf("Trait:  %s", ifelse(is.null(params$get("trait")), "NIL", params$get("trait")))),
+            br(),
+            shiny::tags$p("Press continue...")
+        )
+    } else {
+
+            shiny::tags$div(
+                p("Enter search terms for ONE of the following:"),
+                textInput("by_snp", "SNP:", placeholder = "example: rs12345"),
+                textInput("by_gene", "Gene:", placeholder = "example: PPARG"),
+                textInput("by_region", "Region: (chromosome, start, end)", placeholder = "example: 1, 1000000, 2000000")
+            )
+    }
+    
+    return (ui_confirm)
+}
+

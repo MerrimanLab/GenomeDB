@@ -21,6 +21,7 @@ shinyServer(function(input, output) {
     
     browser <- browser_init()
     db <- database()
+    params <- parameters_()
     
     # get tissue information for lookup / filters etc.
     #info_tissues <- lookup_dim(db, table = "dim_tissue", test = TRUE)
@@ -36,7 +37,29 @@ shinyServer(function(input, output) {
         browser$forward()
         
         if (browser$get() == 1) {
-            output$ui_filters <- renderUI(user_filters(input$opt_dataset, tissues = info_tissues, traits = info_traits))
+            # populate filter UI controls
+            output$ui_filters <- renderUI(user_filters(input, tissues = info_tissues, traits = info_traits))
+            
+        } else if (browser$get() == 2) {
+            # get filter parameters & extract data
+            branch <- nav_path(input$opt_dataset)
+            params$sweep(input)
+            
+            output$ui_filters <- renderUI(confirm_filters(input$opt_dataset, params, branch))
+
+        } else if (browser$get() == 3) {
+            
+            # update params with any new parameters set above
+            branch <- nav_path(input$opt_dataset)
+            params$sweep(input)
+            
+            # info message
+            output$ui_filters <- renderUI(
+                p("Extracting data from the database...", class = "standardtext")
+            )
+            
+            # data extraction...
+            
         } else {
             print(sprintf("browser state:  %s", browser$get()))
             
