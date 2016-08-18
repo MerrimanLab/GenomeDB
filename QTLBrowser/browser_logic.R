@@ -55,7 +55,7 @@ user_filters <- function (input, tissues = info_tissues, traits = info_traits) {
             
             shiny::textInput("by_gene", label = "Gene:", placeholder = "example: ABCG2"),
             shiny::selectizeInput("by_tissue", label = "Tissue(s):",
-                                  choices = c("All tissues", "Top 8 tissues", tissues$smtsd), 
+                                  choices = c("All tissues", "Top 8 tissues", sort(tissues$smts)), 
                                   multiple = TRUE)
         )
         
@@ -76,7 +76,7 @@ user_filters <- function (input, tissues = info_tissues, traits = info_traits) {
         shiny::tags$div(
             
             shiny::selectizeInput("by_trait", label = "Trait:",
-                                  choices = traits$trait),
+                                  choices = sort(traits$trait)),
             shiny::selectizeInput("by_custom", label = "Search by:",
                                   choices = c("SNP (rsid)", "Gene", "Region (chr, start, end)"))  
         )
@@ -172,3 +172,37 @@ confirm_filters <- function (from_dataset, params, branch) {
     return (ui_confirm)
 }
 
+
+# Visualisations
+
+display_expression <- function (gene, db) {
+    
+    gene_expression <- extract_expression(gene, db)
+    ggplot(gene_expression, aes(x = smtsd, y = rpkm, group = smtsd)) +
+        geom_boxplot(aes(colour = smts, fill = smts), alpha = 0.5) +
+        theme_minimal() +
+        guides(colour = "none", fill = "none") +
+        xlab("") +
+        ggtitle(sprintf("Gene Expression: %s", gene)) +
+        theme(axis.text.x = element_text(angle = 60, hjust = 1))
+    
+}
+
+display_qtl <- function (gene, tissues, db) {
+    
+    tissues <- paste0(tissues, collapse = "', '")
+    qtls <- extract_qtl(gene, tissues, db)
+    qtls$position <- qtls$position / 1000000
+
+    viz <- ggplot(qtls, aes(x = position, y = -log10(pvalue))) +
+        geom_point(aes(shape = factor(smts),
+                       size = 1,
+                       alpha = sqrt(1 / (pvalue + 1e-50))),
+                   colour = "darkblue") +
+        facet_wrap(~ smts) +
+        ylab("-log10( pvalue )") + xlab(sprintf("CHR%s position (MB)", unique(qtls$chromosome))) +
+        guides(size = "none", alpha = "none") +
+        theme_minimal()
+    
+    return (viz)
+}

@@ -24,12 +24,12 @@ shinyServer(function(input, output) {
     params <- parameters_()
     
     # get tissue information for lookup / filters etc.
-    #info_tissues <- lookup_dim(db, table = "dim_tissue", test = TRUE)
-    #info_traits <- lookup_dim(db, table = "dim_trait")
-    info_tissues <- data.table(tissue_id = c(1, 2, 3, 4, 5),
-               smts = c("Blood", "Brain", "Adipose", "Liver", 'Stomach'),
-               smtsd = c("Blood", "Brain", "Adipose", "Liver", 'Stomach'))
-    info_traits <- data.table(id = 1:3, trait = c("Diabetes", "Gout", "Urate"))
+    info_tissues <- lookup_dim(db, table = "dim_tissue")
+    info_traits <- lookup_dim(db, table = "dim_trait")
+#     info_tissues <- data.table(tissue_id = c(1, 2, 3, 4, 5),
+#                smts = c("Blood", "Brain", "Adipose", "Liver", 'Stomach'),
+#                smtsd = c("Blood", "Brain", "Adipose", "Liver", 'Stomach'))
+#     info_traits <- data.table(id = 1:3, trait = c("Diabetes", "Gout", "Urate"))
     
     # The CONTINUE button is the main navigation control. It increments a counter variable
     # which will then trigger the correct response based on the IF...ELSE conditions below.
@@ -58,8 +58,16 @@ shinyServer(function(input, output) {
                 p("Extracting data from the database...", class = "standardtext")
             )
             
-            # data extraction...
-            
+            # data extraction
+            output$plot_one <- renderPlot({
+                display_qtl(params$get("gene"),
+                            params$get("tissue"),
+                            db)
+            })
+            output$plot_two <- renderPlot({
+                display_expression(params$get("gene"), db)
+            })
+                
         } else {
             print(sprintf("browser state:  %s", browser$get()))
             

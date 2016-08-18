@@ -44,5 +44,7 @@ shinyUI(fluidPage(
         # this is mainly going to be plot outputs
         # need to think about what / how things will be displayed,
         # but should be very simple from the UI perspective.
+        plotOutput("plot_one"),
+        plotOutput("plot_two")
     )
 ))

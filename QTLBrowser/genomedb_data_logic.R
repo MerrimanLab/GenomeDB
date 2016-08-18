@@ -24,7 +24,7 @@ database <- function () {
     list(
         connect_ = function () conn <<- RODBC::odbcDriverConnect(connection_string),
         disconnect_ = function () {RODBC::odbcClose(conn); conn <<- NULL},
-        query_ = function (query) {RODBC::sqlQuery(conn, query)}
+        query_ = function (query) {RODBC::sqlQuery(conn, query, stringsAsFactors = FALSE)}
     )
 }
 
@@ -44,4 +44,56 @@ lookup_dim <- function (db, table = "dim_tissue") {
     db$disconnect_()
     
     return (info)
+}
+
+
+# Data Extraction Queries
+
+# extract_expression()
+# get gene expression data for Gene, X, in all tissues
+extract_expression <- function (gene, db) {
+    query <- sprintf("
+                     select 
+	                    G.gene_symbol,
+                        T.smts,
+                        T.smtsd,
+                        F.rpkm
+                     from fact_expression F
+                        inner join dim_gene G on G.gene_id = F.gene
+                        inner join dim_tissue T on T.tissue_id = F.tissue
+                     where G.gene_symbol = '%s';
+                     ", gene)
+    db$connect_()
+    results <- db$query_(query)
+    db$disconnect_()
+    
+    return (results)
+    
+}
+
+# extract_qtl()
+# get QTLs for gene, G, in tissues (t1, t2, t3, ...)
+# NOTE: that tissues should be a preformatted string compliant with 
+# standard SQL IN syntax
+extract_qtl <- function (gene, tissues, db) {
+    query <- sprintf("
+                     select 
+	                    G.gene_symbol,
+                        T.smts,
+                        C.chromosome,
+                        C.center_pos as position,
+                        F.pvalue 
+                     from fact_qtl F
+                        inner join dim_gene G on G.gene_id = F.gene
+                        inner join dim_tissue T on T.tissue_id = F.tissue
+                        inner join dim_coordinate C on C.coord = F.coord
+                     where G.gene_symbol = '%s'
+                       and T.smts in ('%s');
+                     ", gene, tissues)
+    
+    db$connect_()
+    results <- db$query_(query)
+    db$disconnect_()
+    
+    return (results)
 }
