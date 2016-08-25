@@ -71,6 +71,7 @@ BEGIN
 END;
 go
 
+
 if exists (select 1 from sys.objects where type = 'P' and name = 'unstage_qtl')
 	drop procedure dbo.unstage_qtl;
 go
@@ -81,12 +82,12 @@ AS
 BEGIN
 
     begin tran;
-	insert into dbo.fact_qtl with (tablockx)
+	insert into dbo.fact_qtl (gene, tissue, dataset, snp_position, A1, A2, beta, pvalue)
 	select
-		G.coord,
 		G.gene_id,
 		@tissue,
 		@datasource,
+		Q.position,
 		Q.A1,
 		Q.A2,
 		Q.beta,

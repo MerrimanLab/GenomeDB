@@ -281,10 +281,10 @@ if exists (
 ) drop table dbo.fact_qtl;
 create table dbo.fact_qtl
 (
-	coord bigint foreign key references dbo.dim_coordinate (coord),
 	gene int foreign key references dbo.dim_gene (gene_id),
 	tissue int foreign key references dbo.dim_tissue (tissue_id),
 	dataset int foreign key references dbo.dim_dataset (dataset_id),
+	snp_position int,
 	A1 nvarchar(max),
 	A2 nvarchar(max),
 	beta float,

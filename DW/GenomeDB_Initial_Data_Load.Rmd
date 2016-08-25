@@ -120,7 +120,7 @@ $ for file in *eQTLs.txt
 
 Setup database connection and global variables:
 ```{r}
-setwd("G:/Datasets/GenomeDBData/filtered_sets")
+setwd("G:/Datasets/GenomeDBData/filtered_sets/filtered_sets/")
 library(RODBC)
 
 qtl_file_pattern <- "eQTLs.txt"
@@ -133,7 +133,7 @@ dim_tissue$stub <- gsub(" - ", " ", dim_tissue$stub)
 dim_tissue$stub <- gsub(" \\(", " ", dim_tissue$stub)
 odbcClose(conn)
 
-for (qtl_ in qtl_files[9:44]) {
+for (qtl_ in qtl_files) {
     
     print(sprintf("--------    %s    --------", qtl_))
     print("")

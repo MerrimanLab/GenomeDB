@@ -80,15 +80,13 @@ extract_qtl <- function (gene, tissues, db) {
                      select 
 	                    G.gene_symbol,
                         T.smts,
-                        C.chromosome,
-                        C.center_pos as position,
+                        F.snp_position as position,
                         F.pvalue 
                      from fact_qtl F
                         inner join dim_gene G on G.gene_id = F.gene
                         inner join dim_tissue T on T.tissue_id = F.tissue
-                        inner join dim_coordinate C on C.coord = F.coord
                      where G.gene_symbol = '%s'
-                       and T.smts in ('%s');
+                       and T.smts = '%s';
                      ", gene, tissues)
     
     db$connect_()
