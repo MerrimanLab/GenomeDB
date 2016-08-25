@@ -201,7 +201,8 @@ display_qtl <- function (gene, tissues, db) {
                    colour = "darkblue") +
         facet_wrap(~ smts) +
         ylab("-log10( pvalue )") + xlab(sprintf("CHR%s position (MB)", unique(qtls$chromosome))) +
-        guides(size = "none", alpha = "none") +
+        guides(size = "none", alpha = "none", shape = "none") +
+        ggtitle(sprintf("QTLs: %s", gene)) +
         theme_minimal()
     
     return (viz)

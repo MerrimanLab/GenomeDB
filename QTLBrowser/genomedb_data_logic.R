@@ -86,7 +86,7 @@ extract_qtl <- function (gene, tissues, db) {
                         inner join dim_gene G on G.gene_id = F.gene
                         inner join dim_tissue T on T.tissue_id = F.tissue
                      where G.gene_symbol = '%s'
-                       and T.smts = '%s';
+                       and T.smts in ('%s');
                      ", gene, tissues)
     
     db$connect_()
