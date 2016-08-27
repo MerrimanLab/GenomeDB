@@ -55,14 +55,7 @@ shinyServer(function(input, output) {
             )
             
             # data extraction
-            output$plot_one <- renderPlot({
-                display_qtl(params$get("gene"),
-                            params$get("tissue"),
-                            db)
-            })
-            output$plot_two <- renderPlot({
-                display_expression(params$get("gene"), db)
-            })
+            display_(input, output, params, db)
                 
         } else {
             print(sprintf("browser state:  %s", browser$get()))

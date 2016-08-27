@@ -95,3 +95,15 @@ extract_qtl <- function (gene, tissues, db) {
     
     return (results)
 }
+
+
+extract_gwas <- function (feature, trait, db) {
+    query <- sprintf("
+                     exec dbo.get_gwas_region @lcl_feature = '%s', @lcl_trait = '%s'
+                     ", feature, trait)
+    db$connect()
+    results <- db$query_(query)
+    db$disconnect_()
+    
+    return (results)
+}

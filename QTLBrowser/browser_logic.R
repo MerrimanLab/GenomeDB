@@ -174,6 +174,53 @@ confirm_filters <- function (from_dataset, params, branch) {
 
 
 # Visualisations
+# display_() 
+#   returns visualisations based on the branch chosen by the user
+display_ <- function (input, output, params, db) {
+    
+    branch <- nav_path(input$opt_dataset)
+    
+    viz_ <- if (branch == 1) {      # 1: QTL only
+        
+        output$plot_one <- renderPlot({
+            display_qtl(params$get("gene"),
+                        params$get("tissue"),
+                        db)
+        })
+        output$plot_two <- renderPlot({
+            display_expression(params$get("gene"), db)
+        })
+        
+    } else if (branch == 2) {       # 2: Own dataset only
+        
+    } else if (branch == 3) {       # 3: GWAS only
+        feature <- ifelse(is.null(params$get("gene")), params$get("snp"), params$get("gene"))
+        trait <- params$get("trait")
+        output$plot_one <- renderPlot({
+            display_gwas(feature, trait, db)
+        })
+        
+    } else if (branch == 4) {       # 4: QTL + GWAS
+        feature <- ifelse(is.null(params$get("gene")), params$get("snp"), params$get("gene"))
+        trait <- params$get("trait")
+        
+        output$plot_one <- renderPlot({
+            display_qtl(params$get("gene"),
+                        params$get("tissue"),
+                        db)
+        })
+        output$plot_two <- renderPlot({
+            display_gwas(feature, trait, db)
+        })
+        
+    } else if (branch == 5) {       # 5: QTL + OWN
+        
+    } else if (branch == 6) {       # 6: GWAS + OWN
+        
+    } else { "oh no - something went wrong" }
+    
+    return (viz_)
+}
 
 display_expression <- function (gene, db) {
     
@@ -203,6 +250,21 @@ display_qtl <- function (gene, tissues, db) {
         ylab("-log10( pvalue )") + xlab(sprintf("CHR%s position (MB)", unique(qtls$chromosome))) +
         guides(size = "none", alpha = "none", shape = "none") +
         ggtitle(sprintf("QTLs: %s", gene)) +
+        theme_minimal()
+    
+    return (viz)
+}
+
+display_gwas <- function (feature, trait, db) {
+    
+    gwas <- extract_gwas(feature, trait, db)
+    gwas$position <- gwas$center_pos / 1000000
+    
+    viz <- ggplot(gwas, aes(x = position, y = -log10(pvalue))) +
+        geom_point(colour = "darkviolet", alpha = 0.3) +
+        facet_wrap(~ dataset) +
+        ylab("-log10( pvalue )") + xlab(sprintf("CHR%s position (MB)", unique(gwas$chromosome))) +
+        ggtitle(sprintf("GWAS (trait = '%s')", trait)) +
         theme_minimal()
     
     return (viz)
