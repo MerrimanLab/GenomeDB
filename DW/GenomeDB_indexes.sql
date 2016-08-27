@@ -17,3 +17,11 @@ go
 
 create nonclustered index idx_qtl_gene on dbo.fact_qtl (gene, tissue);
 go
+
+
+create nonclustered index idx_snp_position on dim_snp (rsid) include (coord);
+go
+
+
+create nonclustered index idx_gwas_by_coordintate on fact_gwas (trait, coord, pvalue);
+go

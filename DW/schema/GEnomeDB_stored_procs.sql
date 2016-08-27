@@ -187,3 +187,41 @@ BEGIN
 	order by T.TissueRank asc, F.snp_position asc;
 END;
 go
+
+
+/*
+ * GWAS query. Extracts a GWAS region, given a target gene or target SNP
+ *
+*/
+if exists (select 1 from sys.objects where type = 'P' and name = 'get_gwas_region')
+	drop procedure dbo.get_gwas_region;
+go
+create procedure dbo.get_gwas_region @lcl_feature nvarchar(max), @lcl_trait nvarchar(max)
+as
+begin
+
+    -- feature: the target feature the user is interested in, i.e. a SNP or gene
+	--          this cte should only ever return 1 row. Where a user is interested in a gene, 
+	--          the SNP union will be NULL and vice versa
+	with feature as (
+		select C.coord, C.chromosome, C.center_pos
+		from dim_gene G
+			inner join dim_coordinate C on C.coord = G.coord
+		where gene_symbol = @lcl_feature
+
+		union 
+
+		select C.coord, C.chromosome, C.center_pos
+		from dim_snp S 
+			inner join dim_coordinate C on C.coord = S.coord
+		where rsid = @lcl_feature
+	)
+	select C.coord, C.chromosome, C.center_pos, G.trait, G.pvalue
+	from dim_coordinate C
+		inner join feature F on F.chromosome = C.chromosome
+		inner join fact_gwas G on G.coord = C.coord
+		inner join dim_trait T on G.trait = T.trait_id
+	where T.trait = @lcl_trait
+	  and C.center_pos between F.center_pos - 500000 and F.center_pos + 500000;
+end;
+go
