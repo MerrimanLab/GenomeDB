@@ -145,3 +145,45 @@ BEGIN
 	truncate table stage.gene;
 END;
 go
+
+
+/*
+ * Interface Queries
+ *
+*/
+
+
+/*
+ * Get top 5 tissues, for gene G, ranked by min pvalue
+ *
+*/
+
+if exists (select 1 from sys.objects where type = 'P' and name = 'get_by_tissue')
+	drop procedure dbo.get_by_top_tissues;
+go
+create procedure dbo.get_by_top_tissues @gene nvarchar(max)
+AS
+BEGIN
+	with tissue_rank as (
+		select T.smts, F.tissue as TissueID, min(pvalue) as TissueScore, rank() over (order by min(pvalue) asc) as TissueRank
+		from fact_qtl as F
+			inner join dim_gene as G on G.gene_id = F.gene
+			inner join dim_tissue as T on T.tissue_id = F.tissue
+		where G.gene_symbol = @gene
+		group by T.smts, F.tissue
+	)
+	select 
+		G.gene_symbol,
+		T.smts,
+		F.snp_position,
+		F.pvalue,
+		T.TissueRank,
+		T.TissueScore
+	from fact_qtl F
+		inner join dim_gene G on G.gene_id = F.gene
+		inner join tissue_rank as T on T.TissueID = F.tissue
+	where G.gene_symbol = @gene
+	  and T.TissueRank < 5
+	order by T.TissueRank asc, F.snp_position asc;
+END;
+go
