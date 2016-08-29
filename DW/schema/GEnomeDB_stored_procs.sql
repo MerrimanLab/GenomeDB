@@ -158,7 +158,7 @@ go
  *
 */
 
-if exists (select 1 from sys.objects where type = 'P' and name = 'get_by_tissue')
+if exists (select 1 from sys.objects where type = 'P' and name = 'get_by_top_tissues')
 	drop procedure dbo.get_by_top_tissues;
 go
 create procedure dbo.get_by_top_tissues @gene nvarchar(max)
@@ -183,7 +183,7 @@ BEGIN
 		inner join dim_gene G on G.gene_id = F.gene
 		inner join tissue_rank as T on T.TissueID = F.tissue
 	where G.gene_symbol = @gene
-	  and T.TissueRank < 5
+	  and T.TissueRank < 7
 	order by T.TissueRank asc, F.snp_position asc;
 END;
 go

@@ -76,18 +76,20 @@ extract_expression <- function (gene, db) {
 # NOTE: that tissues should be a preformatted string compliant with 
 # standard SQL IN syntax
 extract_qtl <- function (gene, tissues, db) {
-    query <- sprintf("
-                     select 
-	                    G.gene_symbol,
-                        T.smts,
-                        F.snp_position as position,
-                        F.pvalue 
-                     from fact_qtl F
-                        inner join dim_gene G on G.gene_id = F.gene
-                        inner join dim_tissue T on T.tissue_id = F.tissue
-                     where G.gene_symbol = '%s'
-                       and T.smts in ('%s');
-                     ", gene, tissues)
+    query <- if(grepl("Top", tissues)) {
+        sprintf("exec dbo.get_by_top_tissues @gene = '%s'", gene)
+    } else {
+        sprintf("select 
+                    G.gene_symbol,
+                    T.smts,
+                    F.snp_position,
+                    F.pvalue 
+                from fact_qtl F
+                  inner join dim_gene G on G.gene_id = F.gene
+                  inner join dim_tissue T on T.tissue_id = F.tissue
+                where G.gene_symbol = '%s'
+                  and T.smts in ('%s');", gene, tissues)
+    }
     
     db$connect_()
     results <- db$query_(query)
