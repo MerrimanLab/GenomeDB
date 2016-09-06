@@ -148,7 +148,7 @@ go
 
 
 /*
- * Interface Queries
+ * Interface / Analytical Queries
  *
 */
 
@@ -226,3 +226,41 @@ begin
 	  and C.center_pos between F.center_pos - 500000 and F.center_pos + 500000;
 end;
 go
+
+
+/*
+ *  Window-based scoring
+ *  For a given dataset, partition the summary results into windows of
+ *  a constant size (default 1 MB - note this is exploratory only)
+ *  and score each window by the minimum pvalue. 
+ *  Return the top K windows (default 20).
+ *
+ *  Examples:
+ *    exec get_top_windows @dataset = 3;    -- runs with default window_size, returning top 20 windows
+ *    exec get_top_windows @dataset = 3, @window_size = 500000, @top_k = 50; 
+ *
+ * NOTE: 
+ *   I have run this on the Locke dataset (obesity) and cross referenced with their published results
+ *   The FTO locus comes out as the top window :)
+ *   All novel loci are also present in the top 50 results :)
+ *   Good agreement then between this naive approach and the results we expected
+*/
+if exists (select 1 from sys.objects where type = 'P' and name = 'get_top_windows')
+	drop procedure dbo.get_top_windows;
+go
+create procedure dbo.get_top_windows @dataset int, @window_size int = 1000000, @top_k int = 20
+as
+begin
+
+    select top (@top_k)
+		chromosome, 
+		start_pos / @window_size as 'window', 
+		min(pvalue) as 'score'
+	from fact_gwas F
+		inner join dim_coordinate C on C.coord = F.coord
+	where dataset = @dataset and pvalue < 0.00005
+	group by chromosome, start_pos / @window_size
+	order by score asc;
+end;
+go
+

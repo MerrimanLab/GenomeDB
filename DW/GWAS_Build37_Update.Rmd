@@ -7,44 +7,34 @@ output: html_document
 
 ## GWAS Build 37 liftover
 
-Many of these GWAS results are pre-build 37. Here, we will update each result set to build 37 and then update GenomeDB where possible. The kottgen dataset is fine, I need to update diagram, GIANT and locke.
+Many of these GWAS results are pre-build 37. I have exported all of the SNP and coordinate information from GenomeDB into a file: SNPCoord_Export_06092016.csv.
+
+Updated positions will be queried from UCSC, table dbSNP142, human reference genome build 37, wil then save this file, bulk load it into SQL Server and update dim_coordinate with these new values (via a join to dim_snp).
 
 ```{r}
 setwd("G:/Datasets/GenomeDBData/GWASDatasets/")
 library(data.table)
 library(glida)
 
-gwas_files <- list(
-  diagram = "diagram.mega-meta.csv",
-  giant = "GIANT_footer_removed.csv",
-  locke = "LockeSummary.csv"
-)
+snp_data <- fread("../SNPCoord_Export_06092016.csv")
+new_positions <- do.call(rbind, lapply(0:5, function (k) {
+  queryUCSC(updatePositions(snp_data[k*500000:(k*500000 + 1), V4]))
+  }))
+
+write.csv(new_positions, "dbSNP_updated_positions.csv", row.names = F, quote = F)
 ```
 
-For each of these files, we will update the SNP positions (where possible) from dbSNP142 (using the GLIDA package). Where SNPs cannot be matched to this db, we will simply leave them untouched in the database. Will keep this in mind as we continue to explore the data.
 
-```{r}
-for  (gwas in gwas_files) {
-    print(sprintf("GWAS FILE:  %s", gwas))
-    tmp <- fread(gwas)
-    print(head(tmp))
-    
-    snpcol <- colnames(tmp)[1]    # SNPs are always the first column
-    setkeyv(tmp, snpcol)
-    
-    # update snps in groups of 100000
-    idx <- 1:nrow(tmp) %/% 100000
-    for (i in unique(idx)) {
-       
-       snps <- unlist(tmp[idx == i, snpcol, with = F])
-       
-       updated_snps <- data.table(glida::queryUCSC(glida::updatePositions(snps)))
-       setkeyv(updated_snps, "SNP")
-       
-       tmp[updated_snps, POS := updated_snps$POS]
-    }
-    
-    write.csv(tmp, paste0(gwas_file, ".build_37.csv", sep = ""), row.names = F, quote = F)
-}
+The match between dbSNP and the GWAS result SNPs from GenomeDB isn't perfect. approx 77000 SNPs weren't matched. Half of these are the oddly named snps which are named with a chromosome and position versus an RSID. Not sure what the otehr's are, but that is ok. We can likely accept a small loss of info here.
 
+SNPs which don't match up, just won't have their coordinates updated in GEnomeDB. We will leave them as is. This may cause a little bit of confusion down the track, but if we are lucky they won't be interesting SNPs.
+
+SQL update query:
+
+```
+update C
+set C.start_pos = D.POS, C.end_pos = D.POS, C.center_pos = D.POS
+from dim_coordinate C
+  inner join dim_snp S on S.coord = C.coord
+  inner join dbSNP_updated_positions D on D.SNP = S.rsid;
 ```
