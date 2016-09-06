@@ -1,0 +1,99 @@
+---
+title: "GenomeDB_Exploring_QTLs_By_Gene"
+author: "Nick Burns"
+date: "7 September 2016"
+output: html_document
+---
+
+## GenomeDB: Exploring QTL regions  
+
+Tony has found a cool QTL publication which explores a GWAS-QTL relationship between TCF7L2 and ACSL5, which is similar to the relationship between FTO and IRX3. Here we will produce some graphs and explore this a little further.
+
+One day, this should be part of the interface, but for now I will just work through it here and test it out.
+
+```{r}
+library(RODBC)
+library(glida)
+library(ggplot2)
+library(data.table)
+library(gridExtra)
+
+setwd("C:/Users/NickBurns/gitRepositories/myGits/GenomeDB/QTLBrowser/")
+source("genomedb_data_logic.R")      # data access / manipulation logic
+source("browser_logic.R")
+```
+
+For this I will modify some of the QTL Browser functions to extract multiple genes.
+
+```{r}
+extract_qtl <- function (gene, tissues, db) {
+    query <- sprintf("select 
+                    G.gene_symbol,
+                    T.smts,
+                    F.snp_position,
+                    F.pvalue 
+                from fact_qtl F
+                  inner join dim_gene G on G.gene_id = F.gene
+                  inner join dim_tissue T on T.tissue_id = F.tissue
+                where G.gene_symbol in ( '%s' )
+                  and T.smts in ('%s');", gene, tissues)
+    
+    
+    db$connect_()
+    results <- db$query_(query)
+    db$disconnect_()
+    
+    return (results)
+}
+display_qtl <- function (gene, tissues, db) {
+    
+    qtls <- extract_qtl(gene, tissues, db)
+    
+    ## This is a fudge to only get the top ranked tissue for each of the three genes
+    qtls <- qtls[((qtls$gene_symbol != 'VTI1A' & qtls$smts != 'Pituitary') | 
+                    (qtls$gene_symbol == 'VTI1A' & qtls$smts == 'Pituitary')), ]
+    qtls$position <- qtls$snp_position / 1000000
+
+    viz <- ggplot(qtls, aes(x = position, y = -log10(pvalue))) +
+        geom_point(aes(alpha = sqrt(1 / (pvalue + 1e-50))),
+                   colour = "darkblue") +
+        facet_wrap(~ smts + gene_symbol) +
+        ylab("-log10( pvalue )") + xlab(sprintf("CHR%s position (MB)", unique(qtls$chromosome))) +
+        guides(size = "none", alpha = "none", shape = "none") +
+        theme_minimal()
+    
+    return (viz)
+}
+
+display_gwas <- function (feature, trait, db) {
+    
+    gwas <- extract_gwas(feature, trait, db)
+    gwas$position <- gwas$center_pos / 1000000
+    
+    viz <- ggplot(gwas, aes(x = position, y = -log10(pvalue))) +
+        geom_point(colour = "darkviolet", alpha = 0.3) +
+        facet_wrap(~ dataset) +
+        ylab("-log10( pvalue )") + xlab("") +
+        theme_minimal()
+    
+    genes <- glida::queryUCSC(glida::fromUCSCEnsemblGenes(chromosome = unique(gwas$chromosome),
+                                         start = 114100000,
+                                         end = 115500000))
+    viz <- gene_layer(viz, genes)
+    
+    return (viz)
+}
+```
+
+Now, let's go:
+
+```{r}
+genes <- "TCF7L2', 'ACSL5', 'VTI1A"
+tissues <- "Blood', 'Pituitary"
+db <- database()
+
+qtls <- display_qtl(genes, tissues, db) + scale_x_continuous(limits = c(113, 116))
+gwas <- display_gwas('TCF7L2', 'diabetes', db) + scale_x_continuous(limits = c(114, 115.5))
+
+grid.arrange(gwas, qtls, ncol = 1)
+```
