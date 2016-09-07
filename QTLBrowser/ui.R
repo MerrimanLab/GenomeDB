@@ -6,6 +6,7 @@
 # June 2016
 
 library(shiny)
+library(plotly)
 
 shinyUI(fluidPage(
     
@@ -45,7 +46,7 @@ shinyUI(fluidPage(
         # need to think about what / how things will be displayed,
         # but should be very simple from the UI perspective.
         #uiOutput("ui_visualisations")
-        plotOutput("plot_one"),
-        plotOutput("plot_two")
+        plotlyOutput("plot_one"),
+        plotlyOutput("plot_two")
     )
 ))

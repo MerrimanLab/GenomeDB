@@ -97,3 +97,17 @@ gwas <- display_gwas('TCF7L2', 'diabetes', db) + scale_x_continuous(limits = c(1
 
 grid.arrange(gwas, qtls, ncol = 1)
 ```
+
+### Plotly  
+
+Going to play around with this and try to make these graphs interactive :)
+
+```{r}
+# install.packages("plotly")
+library(plotly)
+
+ggplotly(qtls)
+```
+
+Gosh that is cool - and so easy.
+

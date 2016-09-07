@@ -182,13 +182,13 @@ display_ <- function (input, output, params, db) {
     
     viz_ <- if (branch == 1) {      # 1: QTL only
         
-        output$plot_one <- renderPlot({
-            display_qtl(params$get("gene"),
+        output$plot_one <- renderPlotly({
+            ggplotly(display_qtl(params$get("gene"),
                         params$get("tissue"),
-                        db)
+                        db))
         })
-        output$plot_two <- renderPlot({
-            display_expression(params$get("gene"), db)
+        output$plot_two <- renderPlotly({
+            ggplotly(display_expression(params$get("gene"), db))
         })
         
     } else if (branch == 2) {       # 2: Own dataset only
@@ -197,21 +197,21 @@ display_ <- function (input, output, params, db) {
         
         feature <- ifelse(is.null(params$get("gene")), params$get("snp"), params$get("gene"))
         trait <- params$get("trait")
-        output$plot_one <- renderPlot({
-            display_gwas(feature, trait, db)
+        output$plot_one <- renderPlotly({
+            ggplotly(display_gwas(feature, trait, db))
         })
         
     } else if (branch == 4) {       # 4: QTL + GWAS
         feature <- ifelse(is.null(params$get("gene")), params$get("snp"), params$get("gene"))
         trait <- params$get("trait")
         
-        output$plot_one <- renderPlot({
-            display_qtl(params$get("gene"),
+        output$plot_one <- renderPlotly({
+            ggplotly(display_qtl(params$get("gene"),
                         params$get("tissue"),
-                        db)
+                        db))
         })
-        output$plot_two <- renderPlot({
-            display_gwas(feature, trait, db)
+        output$plot_two <- renderPlotly({
+            ggplotly(display_gwas(feature, trait, db))
         })
         
     } else if (branch == 5) {       # 5: QTL + OWN

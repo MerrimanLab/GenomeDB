@@ -11,6 +11,7 @@ library(glida)
 library(ggplot2)
 library(data.table)
 library(gridExtra)
+library(plotly)
 source("browser_logic.R")            # control flow logic
 source("genomedb_data_logic.R")      # data access / manipulation logic
 
