@@ -216,12 +216,13 @@ begin
 			inner join dim_coordinate C on C.coord = S.coord
 		where rsid = @lcl_feature
 	)
-	select C.coord, C.chromosome, C.center_pos, D.dataset_name as dataset, G.trait, G.pvalue
+	select C.coord, C.chromosome, C.center_pos, D.dataset_name as dataset, G.trait, S.rsid, G.pvalue
 	from dim_coordinate C
 		inner join feature F on F.chromosome = C.chromosome
 		inner join fact_gwas G on G.coord = C.coord
 		inner join dim_trait T on G.trait = T.trait_id
 		inner join dim_dataset D on G.dataset = D.dataset_id
+		inner join dim_snp S on S.coord = C.coord
 	where T.trait = @lcl_trait
 	  and C.center_pos between F.center_pos - 500000 and F.center_pos + 500000;
 end;

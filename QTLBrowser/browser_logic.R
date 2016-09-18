@@ -185,7 +185,8 @@ display_ <- function (input, output, params, db) {
         output$plot_one <- renderPlotly({
             ggplotly(display_qtl(params$get("gene"),
                         params$get("tissue"),
-                        db))
+                        db),
+                     tooltip = c("x", "y", "smts"))
         })
         output$plot_two <- renderPlotly({
             ggplotly(display_expression(params$get("gene"), db))
@@ -198,7 +199,8 @@ display_ <- function (input, output, params, db) {
         feature <- ifelse(is.null(params$get("gene")), params$get("snp"), params$get("gene"))
         trait <- params$get("trait")
         output$plot_one <- renderPlotly({
-            ggplotly(display_gwas(feature, trait, db))
+            ggplotly(display_gwas(feature, trait, db),
+                     tooltip = c("x", "y", "rsid", "trait"))
         })
         
     } else if (branch == 4) {       # 4: QTL + GWAS
@@ -208,10 +210,11 @@ display_ <- function (input, output, params, db) {
         output$plot_one <- renderPlotly({
             ggplotly(display_qtl(params$get("gene"),
                         params$get("tissue"),
-                        db))
+                        db),
+                     tooltip = c("x", "y", "smts"))
         })
         output$plot_two <- renderPlotly({
-            ggplotly(display_gwas(feature, trait, db))
+            display_gwas(feature, trait, db)
         })
         
     } else if (branch == 5) {       # 5: QTL + OWN
@@ -243,7 +246,7 @@ display_qtl <- function (gene, tissues, db) {
     qtls$position <- qtls$snp_position / 1000000
 
     viz <- ggplot(qtls, aes(x = position, y = -log10(pvalue))) +
-        geom_point(aes(alpha = sqrt(1 / (pvalue + 1e-50))),
+        geom_point(aes(alpha = sqrt(1 / (pvalue + 1e-50)), shape = smts),
                    colour = "darkblue") +
         facet_wrap(~ smts) +
         ylab("-log10( pvalue )") + xlab(sprintf("CHR%s position (MB)", unique(qtls$chromosome))) +
@@ -286,12 +289,13 @@ gene_layer <- function (zoom, genes)
                                              ggplot2::aes(x = GeneStart, xend = GeneEnd, 
                                                           y = Yvalues, yend = Yvalues), 
                                              size = 1, colour = "grey30", alpha = 0.5) + 
-            ggrepel::geom_text_repel(data = genes, 
+            ggplot2::geom_text(data = genes, 
                                      ggplot2::aes(x = (GeneStart + GeneEnd)/2, 
                                                   y = Yvalues, 
-                                                  label = GeneName), 
+                                                  label = GeneName, nudge_y = 10), 
                                      colour = colourByType, size = 3)
     }
+    
     return(zoom)
 }
 
