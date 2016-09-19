@@ -136,35 +136,41 @@ if exists (
 	select 1 
 	from sys.tables as tbl
 		inner join sys.schemas as sch on sch.schema_id = tbl.schema_id
-	where tbl.name = 'dim_coordinate'
+	where tbl.name = 'dim_snp'
 	  and sch.name = 'dbo'
-) drop table dbo.dim_coordinate;
+) drop table dbo.dim_snp;
 
 -- EDITS:
+--    RENAMED dim_coordinate -> dim_snp. This table now reserved for snps only!
 --    removed center_pos, this is a simple calculation and doesn't need to be stored
---    added alleles (A1, A2) to this, as these are the unique constraints
 --    added page compression (target server: SQL Server 2016 Enterprise)
 --    dropped coord from bigint to int (won't exceed 2 billion, likely to be ~ 200 million rows)
+--    ADDED:  A1, A2 and RSID. These are based on dbSNP Build 147 and form the reference coordinate system
+--            for the rest of the data warehouse
+--       Unique constraint added on (chromosome, start_pos, end_pos, rsid)
 -- NOTES:
 --    when loading data, will need to convert X and MT chromosome to integers (23, 24 repsectively)
-create table dbo.dim_coordinate
+--    use SQL Server Data Import / Export tool to stage dbSNP147 (~ 4GB, ~150 million rows)
+create table dbo.dim_snp
 (
-    coord int primary key identity(1, 1),
+    snp_id int primary key identity(1, 1),
 	chromosome tinyint not null,
 	start_pos int not null,
 	end_pos int not null,
+	rsid nvarchar(64), 
 	A1 nvarchar(max),
-	A2 nvarchar(max)
+	A2 nvarchar(max),
 	index idx_coord_chr clustered (chromosome) with (fillfactor = 95, pad_index = on),
-	constraint uniq_coord unique (chromosome, start_pos, end_pos, A1, A2)
-)
-WITH ( data_compression=page );
+	constraint uniq_rsid unique (chromosome, start_pos, end_pos, rsid)
+) WITH ( data_compression=page );
 go
 
 -- dim_gene
 --   contains information relevant to genes.
 --   initially, this table is a direct import from GTEx Gene Expression data
---   though it could be added to over time.
+-- EDITS
+--    This no longer references dim_coordinate. dim_coordinate will be reserved for snps only.
+--    NOTE: dim_coordinate now renamed to dim_snp.
 if exists (
 	select 1 
 	from sys.tables as tbl
@@ -175,12 +181,14 @@ if exists (
 create table dbo.dim_gene
 (
 	gene_id int primary key identity(1, 1),
-	coord int foreign key references dim_coordinate (coord),
+	gene_start int not null,
+	gene_end int not null,
 	ensembl_id nvarchar(32),
 	gene_symbol nvarchar(32) not null,
 	gene_biotype nvarchar(32)
 );
 go
+-- try to build this as a clustered index after data loading
 -- create nonclustered index idx_gene on dim_gene (gene_symbol, gene_id);
 
 if exists (
@@ -258,11 +266,13 @@ if exists (
 ) drop table dbo.fact_gwas;
 
 -- EDITS
---    removed A1 and A2, putting these into dim_coordinate in version2
---    this means that all coordinates are (chr, pos, a1, a2) as defined by dbSNP147
+--    removed A1 and A2, putting these into dim_coordinate (now dim_snp) in version2
+--      this means that all coordinates are (chr, pos, a1, a2) as defined by dbSNP147
+--    Excluding HWE info for now. Very few GWAS summary sets come with this information
+--    Considered adding risk_allele, but few GWAS summary sets include this explicitly.
 create table dbo.fact_gwas
 (
-	coord int foreign key references dbo.dim_coordinate (coord),
+	snp_id int foreign key references dbo.dim_snp (snp_id),
 	trait int foreign key references dbo.dim_trait (trait_id),
 	pop int foreign key references dbo.dim_population (pop_id),
 	dataset int foreign key references dbo.dim_dataset (dataset_id),
@@ -276,8 +286,6 @@ create table dbo.fact_gwas
 ;
 go
 
-
--- NEED TO THINK ABOUT INDEXES
 if exists (
 	select 1 
 	from sys.tables as tbl
@@ -285,22 +293,25 @@ if exists (
 	where tbl.name = 'fact_qtl'
 	  and sch.name = 'dbo'
 ) drop table dbo.fact_qtl;
+
+-- EDITS
+--    included foreign key references to dim_coord on snp_position
+--    removed A1 and A2, these are now defined as part of dim_coord
+--    removed clustered index as it slowed down bulk inserts. Will attempt to build his post-data loading
 create table dbo.fact_qtl
 (
 	gene int foreign key references dbo.dim_gene (gene_id),
 	tissue int foreign key references dbo.dim_tissue (tissue_id),
 	dataset int foreign key references dbo.dim_dataset (dataset_id),
-	snp_position int,
-	A1 nvarchar(max),
-	A2 nvarchar(max),
+	snp int foreign key references dbo.dim_snp (snp_id),
+	--A1 nvarchar(max),
+	--A2 nvarchar(max),
 	beta float,
 	pvalue float--,
 	--index idx_qtl_gene clustered (gene, tissue) with (fillfactor = 95, pad_index = ON)
-);
--- WITH ( data_compression = PAGE );
+) WITH ( data_compression = PAGE );
 go
--- note removed clustered index as it slowed down bulk inserts
--- this means I will have to pay A LOT of attention to appropriate indexing for queries.
+-- try to buil clustered index post-data loading, else build the nonclustered index below
 -- create nonclustered index idx_qtl_gene on dbo.fact_qtl (gene, tissue);
 
 if exists (
@@ -317,8 +328,7 @@ create table dbo.fact_expression
 	dataset int foreign key references dbo.dim_dataset (dataset_id),
 	rpkm float
 	index idx_expr_gene clustered (gene, tissue) with (fillfactor = 95, pad_index = ON)
-);
--- WITH ( data_compression = PAGE );
+) WITH ( data_compression = PAGE );
 go
 
 
