@@ -21,9 +21,10 @@
  * Edits:
  *    3 August, 2016: created script, table DDL created. Nick Burns.
  *    8 August, 2016: updated all identity columns to INT type (tinyint resulted in arithmetic overflow on insert)
+ *    20 Sept, 2016: began working ov version2: dbSNP147 reference coordinate system
  *
 */
-USE [GenomeDB]
+USE [GenomeDBv2]
 go
 -- NOTE: created via the GUI. 4 data files, 1 log file, set to simple recovery
 
@@ -120,11 +121,7 @@ go
 
 -- stage.gwas  
 --   Landing table for GWAS datasets. 
---   NEED TO CONSIDER THIS ONE WHEN I COME TO LOAD GWAS DATA
---create table stage.gwas
---(
---);
---go
+--   These tables will be created as required. Data to be loaded manually via SQL Server Data Import / Export tool.
 
 /*
  * Section 2: Dimension Tables
@@ -142,25 +139,32 @@ if exists (
 	where tbl.name = 'dim_coordinate'
 	  and sch.name = 'dbo'
 ) drop table dbo.dim_coordinate;
+
+-- EDITS:
+--    removed center_pos, this is a simple calculation and doesn't need to be stored
+--    added alleles (A1, A2) to this, as these are the unique constraints
+--    added page compression (target server: SQL Server 2016 Enterprise)
+--    dropped coord from bigint to int (won't exceed 2 billion, likely to be ~ 200 million rows)
+-- NOTES:
+--    when loading data, will need to convert X and MT chromosome to integers (23, 24 repsectively)
 create table dbo.dim_coordinate
 (
-    coord bigint primary key identity(1, 1),
+    coord int primary key identity(1, 1),
 	chromosome tinyint not null,
 	start_pos int not null,
 	end_pos int not null,
-	center_pos int,
+	A1 nvarchar(max),
+	A2 nvarchar(max)
 	index idx_coord_chr clustered (chromosome) with (fillfactor = 95, pad_index = on),
-	constraint uniq_coord unique (chromosome, start_pos, end_pos)
-);
--- WITH ( data_compression=page );
+	constraint uniq_coord unique (chromosome, start_pos, end_pos, A1, A2)
+)
+WITH ( data_compression=page );
 go
 
 -- dim_gene
 --   contains information relevant to genes.
 --   initially, this table is a direct import from GTEx Gene Expression data
 --   though it could be added to over time.
-
--- NEED TO THINK ABOUT INDEXES
 if exists (
 	select 1 
 	from sys.tables as tbl
@@ -171,7 +175,7 @@ if exists (
 create table dbo.dim_gene
 (
 	gene_id int primary key identity(1, 1),
-	coord bigint foreign key references dim_coordinate (coord),
+	coord int foreign key references dim_coordinate (coord),
 	ensembl_id nvarchar(32),
 	gene_symbol nvarchar(32) not null,
 	gene_biotype nvarchar(32)
@@ -194,10 +198,7 @@ create table dbo.dim_tissue
 );
 go
 
--- Do I really need these tables? 
--- It would save space in the fact table, but then perhaps page compression will do the trick.
--- The only possible use I can think of, is if we want an interface to extract all unique traits / populations
--- in which case, these tables will provide a far quicker route.
+-- dim_trait
 if exists (
 	select 1 
 	from sys.tables as tbl
@@ -212,6 +213,7 @@ create table dbo.dim_trait
 );
 go
 
+-- dim_population
 if exists (
 	select 1 
 	from sys.tables as tbl
@@ -226,6 +228,7 @@ create table dbo.dim_population
 );
 go
 
+-- dim_dataset
 if exists (
 	select 1 
 	from sys.tables as tbl
@@ -253,20 +256,23 @@ if exists (
 	where tbl.name = 'fact_gwas'
 	  and sch.name = 'dbo'
 ) drop table dbo.fact_gwas;
+
+-- EDITS
+--    removed A1 and A2, putting these into dim_coordinate in version2
+--    this means that all coordinates are (chr, pos, a1, a2) as defined by dbSNP147
 create table dbo.fact_gwas
 (
-	coord bigint foreign key references dbo.dim_coordinate (coord),
+	coord int foreign key references dbo.dim_coordinate (coord),
 	trait int foreign key references dbo.dim_trait (trait_id),
 	pop int foreign key references dbo.dim_population (pop_id),
 	dataset int foreign key references dbo.dim_dataset (dataset_id),
-	A1 nvarchar(max),
-	A2 nvarchar(max),
+	--A1 nvarchar(max),
+	--A2 nvarchar(max),
 	beta float,
 	pvalue float,
 	n_samples int,
 	allele_freq int
-);
--- WITH ( data_compression = PAGE )
+) WITH ( data_compression = PAGE )
 ;
 go
 
