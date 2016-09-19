@@ -28,7 +28,7 @@ diagram[, Start := as.integer(POS)]
 diagram[, End := as.integer(Start + 1)]
 
 write.bed(diagram[, .(CHR, Start, End, SNP)],
-          paste0(data_dir, "diagram_pre_lift_over.tsv", sep = "")
+          paste0(data_dir, "diagram_pre_lift_over.tsv", sep = ""))
 ```
 
 Then run the following command line tool to lift over the coords:
