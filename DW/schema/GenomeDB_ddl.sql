@@ -155,13 +155,12 @@ create table dbo.dim_snp
 (
     snp_id int primary key identity(1, 1),
 	chromosome tinyint not null,
-	start_pos int not null,
-	end_pos int not null,
+	position int not null,
 	rsid nvarchar(64), 
 	A1 nvarchar(max),
 	A2 nvarchar(max),
 	index idx_coord_chr clustered (chromosome) with (fillfactor = 95, pad_index = on),
-	constraint uniq_rsid unique (chromosome, start_pos, end_pos, rsid)
+	constraint uniq_rsid unique (chromosome, position, rsid)
 ) WITH ( data_compression=page );
 go
 

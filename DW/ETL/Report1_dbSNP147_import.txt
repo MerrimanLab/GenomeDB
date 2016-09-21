@@ -1,0 +1,49 @@
+The execution was successful
+
+- Initializing Data Flow Task (Success)
+
+- Initializing Connections (Success)
+
+- Setting SQL Command (Success)
+
+- Setting Source Connection (Success)
+
+- Setting Destination Connection (Success)
+
+- Validating (Success)
+
+- Prepare for Execute (Success)
+
+- Pre-execute (Success)
+	Messages
+	* Information 0x402090dc: Data Flow Task 1: The processing of file "G:\Datasets\dbSNP\dbSNP_Build147_filtered.csv" has started.
+	 (SQL Server Import and Export Wizard)
+	
+
+- Executing (Success)
+
+- Copying to [stage].[dbSNP147] (Success)
+	* 152712722 rows transferred
+
+	Messages
+	* Information 0x402090de: Data Flow Task 1: The total number of data rows processed for file "G:\Datasets\dbSNP\dbSNP_Build147_filtered.csv" is 152712722.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x402090df: Data Flow Task 1: The final commit for the data insertion in "Destination - dbSNP147" has started.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x402090e0: Data Flow Task 1: The final commit for the data insertion  in "Destination - dbSNP147" has ended.
+	 (SQL Server Import and Export Wizard)
+	
+
+- Post-execute (Success)
+	Messages
+	* Information 0x402090dd: Data Flow Task 1: The processing of file "G:\Datasets\dbSNP\dbSNP_Build147_filtered.csv" has ended.
+	 (SQL Server Import and Export Wizard)
+	
+	* Information 0x4004300b: Data Flow Task 1: "Destination - dbSNP147" wrote 152712722 rows.
+	 (SQL Server Import and Export Wizard)
+	
+
+
+
