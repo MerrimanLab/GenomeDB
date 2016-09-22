@@ -25,7 +25,10 @@ TIME: approx 5 hours
 
 We used SQL Server Data Import / Export tool to load the processed dbSNP file directly into GenomeDB.dbo.dim_snp. Nothing special required here, just a straight load.
 
-Recommend dropping the clustered index on dim_snp prior to load for maximum efficiency. Then rebuild the clustered index post-import.
+Recommend dropping the clustered index on dim_snp prior to load for maximum efficiency. Then rebuild the clustered index post-import. 
+
+(approx. 1.5 hours to re-create the clustered index)  
+(approx. 0.5 hours to backup database)
 
 
 ## Step 3: Importing GTEx datasets  
