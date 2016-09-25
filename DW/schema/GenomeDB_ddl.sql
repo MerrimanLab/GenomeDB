@@ -24,7 +24,7 @@
  *    20 Sept, 2016: began working ov version2: dbSNP147 reference coordinate system
  *
 */
-USE [GenomeDBv2]
+USE [GenomeDB]
 go
 -- NOTE: created via the GUI. 4 data files, 1 log file, set to simple recovery
 
@@ -51,12 +51,17 @@ create table stage.qtl
 	ensembl_id nvarchar(32),
 	chromosome tinyint,
 	position int,
-	A1 nvarchar(max),
-	A2 nvarchar(max),
+	A1 nvarchar(4000),
+	A2 nvarchar(4000),
 	genome_build char(3),
 	beta float,
 	tstat float,
-	pvalue float
+	pvalue float,
+	tissue_name nvarchar(128),
+	dataset_id int null,
+	gene_id int null,
+	tissue_id int null,
+	snp_id int null
 );
 go
 -- index for unstaging into fact_qtl
@@ -157,12 +162,17 @@ create table dbo.dim_snp
 	chromosome tinyint not null,
 	position int not null,
 	rsid nvarchar(64), 
-	A1 nvarchar(max),
-	A2 nvarchar(max),
-	index idx_coord_chr clustered (chromosome) with (fillfactor = 95, pad_index = on),
-	constraint uniq_rsid unique (chromosome, position, rsid)
+	A1 nvarchar(4000),
+	A2 nvarchar(4000),
+	index idx_snp_chromosome clustered (chromosome)
 ) WITH ( data_compression=page );
 go
+-- create the following indexes after bulk load & prior to loading QTL / GWAS sets:
+/*
+create clustered index idx_coord_chr on dim_snp (chromosome);  
+create nonclustered index idx_snp_mapping on dim_snp (chromosome)  
+  include (position, A1, A2);
+*/
 
 -- dim_gene
 --   contains information relevant to genes.
@@ -180,6 +190,7 @@ if exists (
 create table dbo.dim_gene
 (
 	gene_id int primary key identity(1, 1),
+	chromosome tinyint,
 	gene_start int not null,
 	gene_end int not null,
 	ensembl_id nvarchar(32),
@@ -278,6 +289,7 @@ create table dbo.fact_gwas
 	--A1 nvarchar(max),
 	--A2 nvarchar(max),
 	beta float,
+	se float,
 	pvalue float,
 	n_samples int,
 	allele_freq int

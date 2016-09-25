@@ -1,0 +1,46 @@
+---
+title: "GTEx_DataPreparation"
+author: "Nick Burns"
+date: "23 September 2016"
+output: html_document
+---
+
+## GTEx Data Wrangling  
+
+There are a few little tidy up things that I need to do with the GTEx data:  
+
+  1. Standardise the metadata (specifically, the SMTSD names) so that these can be matched  
+  
+```{r}
+setwd("G:/Datasets/GenomeDBData/")
+library(data.table)
+
+meta_data <- fread("gtex_metadata.csv")
+meta_data
+```
+
+What I really want to do here is strip out any non-alpha characters from the SMTSD column so that it matches the naming convention used in the QTL files.
+
+```{r}
+clean_smtsd <- function (x, target) {
+    gsub(target, "", x)
+}
+targets <- c("- ", "\\(", "\\)")
+for (target in targets) {
+    meta_data[, SMTSD := clean_smtsd(SMTSD, target)]
+}
+
+meta_data[1:100, SMTSD]
+```
+
+That worked nicely. There are also some blank SMTS rows. In all cases, these are redundant and so I will move them entirely
+
+```{r}
+meta_data <- meta_data[nchar(SMTS) > 3]
+```
+
+Finally, write this file back to disk
+
+```{r}
+write.csv(meta_data, "gtex_metadata.csv", row.names = FALSE, quote = FALSE)
+```
