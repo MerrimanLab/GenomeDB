@@ -30,9 +30,11 @@ TIME: approx. 2 hours
 
 Build the following indexes to improve query performance (essential for bulk load of QTL and GWAS data)  
 
+```
 create clustered index idx_snp_chromosome on dim_snp (chromosome);  
 create nonclustered index idx_snp_mapping on dim_snp (chromosome)  
   include (position, A1, A2);
+```
 
 **Backup the database**  
 TIME: approx 30 minutes
@@ -40,7 +42,32 @@ TIME: approx 30 minutes
 
 ## Step 3: Importing GTEx datasets  
 
-more
+**PART 1: Tissue, Gene and QTL data**  
+
+We have developed an SSIS package to do this. The workflow is shown below:  
+
+![Image of SSIS ETL Workflow](./GTExETL/SSISDB_workflow.png)  
+
+
+
+The package requires the following:  
+
+  - **connection managers**: flat file connection managers for GTEx tissue metadata, GTEx gene data, GTEx QTL files. OLE DB connection manager pointing to GenomeDB on SQL Server.  
+  - **input QTL data directory**: the ```for each``` container iterates over all QTL files in a named directory. You can configure this directory to be anywhere, but it should only contain QTL files that you want to load.  
+
+We had initially created a very nice-looking, seemless workflow using a series of SSIS operations within a single data flow. However this performed *terribly*(!) due to the automatic parallel-staging of batches - just caused massive contention.
+
+Ultimately, we developed a series of independent SQL tasks. This meant each operation (e.g. lookups of tissue, gene and snp ids) perform independently and in sequence. 
+
+The same workflow could be scripted (say in R with an ODBC connection).
+
+**TO DO (future work):**  
+Add logging to the SSIS workflow to capture genes and snps which do not map. NOTE: with regards to genes, we have found the majority of Ensembl IDs which do not match are psuedogenes or non-coding RNAs.
+
+**PART 2: Gene Expression data**  
+
+This file is huge, 27 GB. Loading of this dataset included in the SSIS ETL package.  
+
 
 ## Step 4: Importing GWAS summary sets  
 
