@@ -80,7 +80,7 @@ if not exists (
 )
 create table stage.expression
 (
-	ensembl_id nvarchar(32),
+	ensembl_id nvarchar(128),
 	gene_symbol nvarchar(32),
 	sample_id nvarchar(128),
 	rpkm float
