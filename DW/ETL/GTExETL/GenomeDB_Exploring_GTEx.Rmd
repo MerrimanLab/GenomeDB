@@ -1,0 +1,103 @@
+---
+title: "GenomeDB_Exploring_GTEx"
+author: "Nick Burns"
+date: "5 October 2016"
+output: html_document
+---
+
+# GenomeDB: exploring GTEx  
+
+Have finally got GenomeDB reloaded, with dbSNP147 as the reference coordinate system. GTEx data is in there, and I just want to make sure that the data looks really similar to GenomeDB-version1. This will be a basic, cheery picked exploration of a few gene regions to make sure that everything looks roughly correct.  
+
+## Preparation  
+
+Create a connection to the database, and setup the query template and the visualisation template
+
+```{r}
+library(RODBC)
+library(data.table)
+library(ggplot2)
+
+conn <- odbcConnect("R-SQL")
+sqlQuery(conn, "use GenomeDB")
+
+query <- "
+    select
+    	G.gene_symbol, T.smtsd, S.chromosome, S.position, Q.pvalue
+    from fact_qtl Q
+      inner join dim_gene G on G.gene_id = Q .gene
+      inner join dim_tissue T on T.tissue_id = Q.tissue
+      inner join dim_snp S on S.snp_id = Q.snp
+    where G.gene_symbol = '%s'
+      and T.smts = '%s'"
+
+display <- function (qtls) {
+    ggplot(qtls, aes(x = position / 1000000, y = -log10(pvalue))) +
+        geom_point(colour = "darkblue", alpha = 0.5) +
+        theme_minimal() +
+        xlab("position (mb)") +
+        ylab("-log10( pvalue )") 
+}
+```
+
+## Quick visualisations
+
+ABCG2:
+
+```{r}
+abcg2 <- sqlQuery(conn, sprintf(query, "ABCG2", "Thyroid"))
+head(abcg2)
+
+display(abcg2)
+```
+
+FTO:
+```{r}
+qtl <- sqlQuery(conn, sprintf(query, "FTO", "Blood"))
+head(qtl)
+
+display(qtl)
+```
+
+IRX3:
+```{r}
+qtl <- sqlQuery(conn, sprintf(query, "IRX3", "Pancreas"))
+head(qtl)
+
+display(qtl)
+```
+
+PPARG:
+```{r}
+qtl <- sqlQuery(conn, sprintf(query, "PPARG", "Brain"))
+head(qtl)
+
+display(qtl)
+```
+
+TCFL7:
+
+```{r}
+qtl <- sqlQuery(conn, sprintf(query, "TCF7L2", "Blood Vessel"))
+head(qtl)
+
+display(qtl)
+```
+
+ACSL5
+```{r}
+qtl <- sqlQuery(conn, sprintf(query, "ACSL5", "Blood"))
+head(qtl)
+
+display(qtl)
+```
+
+
+This is great news! Everything looks really sensible, and consistent with the visualisations from Version 1 of GenomeDB.
+
+
+## Close db connection
+
+```{r}
+odbcClose(conn)
+```
