@@ -1,0 +1,136 @@
+---
+title: "GenomeDB_GWAS_ManhattanPlots"
+author: "Nick Burns"
+date: "7 October 2016"
+output: html_document
+---
+
+## GenomeDB: exploring GWAS data  
+
+I have finally got a whole lot of GWAS datasets loaded into GenomeDB. These have all been mapped against dbSNP147, build 37. To make sure that everything looks sensible, I am going to plot manhattan plots for each dataset / trait and compare these to published manhattan plots (where possible), otherwise to key results.
+
+### Database connection
+
+```{r}
+library(RODBC)
+library(data.table)
+library(qqman)
+
+conn <- odbcConnect("R-SQL")
+sqlQuery(conn, "use GenomeDB")
+```
+
+
+### Diagram, T2D  
+
+Will start with T2D and DIAGRAM. These results are published and well recognised - so should be a good place to start. The dataset_id for DIAGRAM is 2. There is only the one trait for DIAGRAM (T2D).    
+
+```{r}
+gwas <- sqlQuery(conn, "select S.chromosome,
+                               S.position,
+                               S.rsid,
+                               G.pvalue
+                 from fact_gwas G 
+                 inner join dim_snp S on S.snp_id = G.snp_id
+                 where dataset = 2;")
+gwas[gwas$pvalue == 0, "pvalue"] <- 1e-80
+
+manhattan(gwas[gwas$pvalue < 0.001, ], 
+          chr = "chromosome",
+          bp = "position",
+          p = "pvalue")
+```
+
+Just visually, this looks really good. Clear peaks, so we can be quite confident that the data has mapped over consistently. And the actual profile matches really well with Mahajan's (DIAGRAM) published manhattan plot.
+
+### GIANT  
+
+Let's do the same for the GIANT (dataset = 3) GWAS. Beginning with Height (trait = 6):
+
+```{r}
+gwas <- sqlQuery(conn, "select S.chromosome,
+                               S.position,
+                               S.rsid,
+                               G.pvalue
+                 from fact_gwas G 
+                 inner join dim_snp S on S.snp_id = G.snp_id
+                 where dataset = 3
+                   and trait = 6;")
+gwas[gwas$pvalue == 0, "pvalue"] <- 1e-80
+
+manhattan(gwas[gwas$pvalue < 0.01, ], 
+          chr = "chromosome",
+          bp = "position",
+          p = "pvalue")
+```
+
+This is an insane manhattan plot - but it is consistent with an older study (https://openi.nlm.nih.gov/detailedresult.php?img=PMC2729669_ddp29601&req=4). The associations seem to be truly across the whole genome. The added power in this study comes from the huge sample size. Happy that this is as it should be.
+
+**BMI**  
+
+```{r}
+gwas <- sqlQuery(conn, "select S.chromosome,
+                               S.position,
+                               S.rsid,
+                               G.pvalue
+                 from fact_gwas G 
+                 inner join dim_snp S on S.snp_id = G.snp_id
+                 where dataset = 3
+                   and trait = 1;")
+gwas[gwas$pvalue == 0, "pvalue"] <- 1e-80
+
+manhattan(gwas[gwas$pvalue < 0.01, ], 
+          chr = "chromosome",
+          bp = "position",
+          p = "pvalue")
+```
+
+Great, this is consisent with publishd GWAS :) Let's look at another study.
+
+### Kottgen  
+
+**Gout** 
+
+```{r}
+gwas <- sqlQuery(conn, "select S.chromosome,
+                               S.position,
+                               S.rsid,
+                               G.pvalue
+                 from fact_gwas G 
+                 inner join dim_snp S on S.snp_id = G.snp_id
+                 where dataset = 4
+                   and trait = 5;")
+gwas[gwas$pvalue == 0, "pvalue"] <- 1e-30
+
+manhattan(gwas[gwas$pvalue < 0.1, ], 
+          chr = "chromosome",
+          bp = "position",
+          p = "pvalue")
+```
+
+This is pretty much what we expect for gout: SLC2A9 and ABCG2. Urate should be a little more interesting:
+
+**Urate**  
+
+```{r}
+gwas <- sqlQuery(conn, "select S.snp_id, S.chromosome,
+                               S.position,
+                               S.rsid,
+                               G.pvalue
+                 from fact_gwas G 
+                 inner join dim_snp S on S.snp_id = G.snp_id
+                 where dataset = 4
+                   and trait = 7;")
+gwas[gwas$pvalue == 0, "pvalue"] <- 1e-80
+
+manhattan(gwas[gwas$pvalue < 0.01, ], 
+          chr = "chromosome",
+          bp = "position",
+          p = "pvalue")
+```
+
+This is bang on - perfectly matches Kottgen's paper (which is what we hoped!).
+
+## Final Thoughts  
+
+I am really happy with this. The GWAS results seem to have mapped to dbSNP147, build37 really well. Job well done.
