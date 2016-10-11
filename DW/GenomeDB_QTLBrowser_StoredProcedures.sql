@@ -105,3 +105,25 @@ begin
 end;
 go
 
+/*
+ * get_genes
+ *     returns genes within a region
+*/
+if exists (select 1 from sys.sysobjects where name = 'get_genes' and xtype = 'p')
+	drop procedure dbo.get_genes;
+go
+create procedure dbo.get_genes
+	@chromosome tinyint,
+	@start int,
+	@end int
+as
+begin
+	select chromosome, gene_symbol, gene_start, gene_end
+	from dim_gene
+	where gene_biotype = 'protein_coding'
+	  and chromosome = @chromosome
+	  and (    (gene_start between @start and @end)
+	        or (gene_end between @start and @end)
+			or (gene_start < @start and gene_end > @end) );
+end;
+go

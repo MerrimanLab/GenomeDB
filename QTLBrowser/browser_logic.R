@@ -117,6 +117,17 @@ lookup_qtl <- function (params, db) {
     return (results)
 }
 
+lookup_genes <- function (chromosome, start_position, end_position, db) {
+    
+    query <- sprintf("exec dbo.get_genes @chromosome = %s, @start = %s, @end = %s",
+                     chromosome, start_position, end_position)
+    db$open()
+    results <- db$query(query)
+    db$close()
+    
+    return (data.table(results))
+}
+
 
 #### --------------------------------------------------------------------------- ####
 #
@@ -330,7 +341,7 @@ stage_three_filters <- function (params) {
 #   Visualisation Layer                                   
 #
 # --------------------------------------------------------------------------- #
-display <- function (data, type = "GWAS") {
+display <- function (data, db, type = "GWAS") {
     
     
     base_layer <- function () {
@@ -372,32 +383,78 @@ display <- function (data, type = "GWAS") {
     return (layers)
 }
 
+display_genes <- function (plot, db) {
+    
+    
+    data <- data.table(ggplot2::ggplot_build(plot)$data[[1]])
+    
+    gene_data <- lookup_genes(data[1, b],
+                              data[, min(x) * 1000000],
+                              data[, max(x) * 1000000],
+                              db)
+    
+    # this will alternate gene positions on the y-axis
+    gene_data[, y_pos := c(-5, -10)]
+    
+    # this is a dirty hack to get the plotly tooltips to work
+    # the gene data needs to have all the columns present in the tooltip
+    gene_data[, pvalue := NA]
+    gene_data[, rsid := NA]
+    gene_data[, beta := 0]
+    gene_data[, position := 0]
+    
+    plot <- plot + 
+        ggplot2::geom_segment(data = gene_data,
+                              aes(x = gene_start / 1000000,
+                                  xend = gene_end / 1000000,
+                                  y = y_pos, yend = y_pos), 
+                              colour = "darkblue",
+                              size = 0.5) +
+        ggplot2::geom_text(data = gene_data,
+                           aes(x = (gene_start + gene_end) / 2000000,
+                               y = y_pos + 1,
+                               label = gene_symbol),
+                           size = 3,
+                           colour = "darkblue") +
+        ggplot2::guides(colour = "none")
+    
+    return (plot)
+
+}
+
+# plot_data()
+# Plots the GWAS and QTL datasets.
+# The plots are linked interactively: QTL -> GWAS
+# As you hover over QTL points, they will be highlighted in the GWAS plot.
+# Decided to run the linked interaction in this direction, as there are 
+# quite a lot of SNPs in the GWAS set that have been filtered out of the QTL set.
 plot_data <- function (params, db, type = "GWAS") {
     
     if (type == "GWAS") {
         
-        p <- display(lookup_gwas(params, db))
-        viz <- ggplotly(p$base + p$scatter + p$facet,
-                        tooltip = c("a", "b", "c", "d", "y"),
-                        source = "gwas_source")
-    } else {
+        p <- display(lookup_gwas(params, db), db)
+        pgwas <- p$base + p$scatter + p$facet
+        p <- display_genes(pgwas, db)
         
-        # eventdata, used for linking the GWAS and QTL plots
-        # gets cursor position from the source (GWAS plot)
-        eventdata <- event_data("plotly_hover", source = "gwas_source")
+        # linked interaction (highlights SNPs)
+        eventdata <- event_data("plotly_click", source = "source")
+        gwas_data <- data.table(ggplot_build(pgwas)$data[[1]])
         
-        # create QTL plot, and extract QTL data for linked interaction
-        p <- display(lookup_qtl(params, db), type = type)
-        
-        viz <- p$base + p$scatter + p$facet
-        viz_data <- data.table(ggplot_build(viz)$data[[1]])
-        
-        # plot, adding a trace for the linked ineraction
-        viz <- ggplotly(viz,
+        viz <- ggplotly(p,
                         tooltip = c("a", "b", "c", "d", "y")) %>%
             add_trace(x = eventdata$x,
-                      y = viz_data[x == eventdata$x, y],
+                      y = gwas_data[x == eventdata$x, y],
                       colour = 'red')
+    } else {
+        
+        # create QTL plot, and extract QTL data for linked interaction
+        p <- display(lookup_qtl(params, db), db, type = type)
+        
+        viz <- p$base + p$scatter + p$facet
+        # plot, adding a trace for the linked ineraction
+        viz <- ggplotly(viz,
+                        tooltip = c("a", "b", "c", "d", "y"),
+                        source = "source") 
         
     }
     
