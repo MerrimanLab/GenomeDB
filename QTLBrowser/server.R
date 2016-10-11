@@ -68,14 +68,31 @@ shinyServer(function (input, output) {
             )
             
             if (!is.na(params$get("gwas_dataset"))) {
-                output$gwas_viz <- renderPlotly(
-                    display(lookup_gwas(params, db))
-                )
+                output$gwas_viz <- renderPlotly({
+                    
+                    p <- display(lookup_gwas(params, db))
+                    ggplotly(p$base + p$scatter + p$facet,
+                             tooltip = c("a", "b", "c", "d", "y"),
+                             source = "gwas_source")
+                    
+                })
             }
             if (!is.na(params$get("qtl_dataset"))) {
-                output$qtl_viz <- renderPlotly(
-                    display(lookup_qtl(params, db), type = "qtls")
-                )
+                output$qtl_viz <- renderPlotly({
+                    
+                    eventdata <- event_data("plotly_hover", source = "gwas_source")
+                    
+                    p <- display(lookup_qtl(params, db), type = "qtls")
+                    viz <- p$base + p$scatter + p$facet
+                    viz_data <- data.table(ggplot_build(viz)$data[[1]])
+                    
+                    ggplotly(p$base + p$scatter + p$facet,
+                             tooltip = c("a", "b", "c", "d", "y")) %>%
+                        add_trace(x = eventdata$x,
+                                  y = viz_data[x == eventdata$x, y],
+                                  colour = 'red')
+                    
+                })
             }
             
         } else {

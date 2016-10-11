@@ -332,37 +332,43 @@ stage_three_filters <- function (params) {
 # --------------------------------------------------------------------------- #
 display <- function (data, type = "GWAS") {
     
-    title <- sprintf("%s", ifelse(type == "GWAS", data[1, trait], data[1, gene_symbol]))
-    colour <- ifelse(type == "GWAS", "#2980b9", "#34495e")
-    facet <- ifelse(type == "GWAS", "~ dataset", "~ smts")
     
     base_layer <- function () {
+        
+        title <- sprintf("%s", ifelse(type == "GWAS", data[1, trait], data[1, gene_symbol]))
+        
         # note addition aesthetics for the plotly tooltip
-        ggplot2::ggplot(data, aes(x = position / 1000000, 
+        g <- ggplot2::ggplot(data, aes(x = position / 1000000, 
                                   y = -log10(pvalue),
                                   a = rsid,
                                   b = chromosome,
                                   c = position,
-                                  d = dataset)) +
+                                  d = beta)) +
             ggplot2::theme_minimal() +
             ggplot2::xlab(sprintf("Chromosome %s (mb)", data[1, chromosome])) +
             ggplot2::ylab("Association") +
             ggplot2::ggtitle(title)
+        
+        return (g)
     }
     
-    points <- function (x) {
-        ggplot2::geom_point(colour = x, alpha = 0.5)
+    points <- function () {
+        colour <- ifelse(type == "GWAS", "#2980b9", "#34495e")
+        return (ggplot2::geom_point(colour = colour, alpha = 0.5))
     }
     
-    facets <- function (x) {
-        ggplot2::facet_wrap(formula(x), ncol = 1)
+    facets <- function () {
+        
+        facet <- ifelse(type == "GWAS", "~ dataset", "~ smts")
+        return (ggplot2::facet_wrap(formula(facet), ncol = 1))
     }
     
-    viz <- plotly::ggplotly(
-        base_layer() + points(colour) + facets(facet),
-        tooltip = c("a", "b", "c", "y", "d")
+    layers <- list(
+        base = base_layer(),
+        scatter = points(),
+        facet = facets()
     )
     
-    return (viz)
+    return (layers)
 }
 

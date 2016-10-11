@@ -66,7 +66,7 @@ begin
 		from dim_snp
 		where rsid = @feature
 	)
-	select F.chromosome, S.position, S.rsid, G.pvalue, @trait as 'trait', @dataset as 'dataset'
+	select F.chromosome, S.position, S.rsid, G.pvalue, G.beta, @trait as 'trait', @dataset as 'dataset'
 	from fact_gwas G
 		inner join dim_snp S on S.snp_id = G.snp_id
 		inner join dim_trait T on T.trait_id = G.trait
@@ -93,7 +93,7 @@ create procedure dbo.get_qtl_region
 	@dataset nvarchar(32)
 as
 begin
-	select G.gene_symbol, T.smts, S.chromosome, S.position, S.rsid, Q.pvalue, @dataset as 'dataset'
+	select G.gene_symbol, T.smts, S.chromosome, S.position, S.rsid, Q.pvalue, Q.beta, @dataset as 'dataset'
 	from fact_qtl Q
 		inner join dim_gene G on G.gene_id = Q.gene
 		inner join dim_snp S on S.snp_id = Q.snp
