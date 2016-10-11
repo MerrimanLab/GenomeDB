@@ -60,37 +60,22 @@ shinyServer(function (input, output) {
         } else if (browser$get() == 4) {        # visualise data
             
             params$set("target", input$target)
-            output$main_panel <- renderUI(
-                shiny::tags$div(
-                    plotlyOutput("gwas_viz"),
-                    plotlyOutput("qtl_viz")
-                )
-            )
             
             if (!is.na(params$get("gwas_dataset"))) {
+                
+                output$gwas_panel <- renderUI(plotlyOutput("gwas_viz"))
                 output$gwas_viz <- renderPlotly({
                     
-                    p <- display(lookup_gwas(params, db))
-                    ggplotly(p$base + p$scatter + p$facet,
-                             tooltip = c("a", "b", "c", "d", "y"),
-                             source = "gwas_source")
+                   plot_data(params, db)
                     
                 })
             }
             if (!is.na(params$get("qtl_dataset"))) {
+                
+                output$qtl_panel <- renderUI(plotlyOutput("qtl_viz"))
                 output$qtl_viz <- renderPlotly({
                     
-                    eventdata <- event_data("plotly_hover", source = "gwas_source")
-                    
-                    p <- display(lookup_qtl(params, db), type = "qtls")
-                    viz <- p$base + p$scatter + p$facet
-                    viz_data <- data.table(ggplot_build(viz)$data[[1]])
-                    
-                    ggplotly(p$base + p$scatter + p$facet,
-                             tooltip = c("a", "b", "c", "d", "y")) %>%
-                        add_trace(x = eventdata$x,
-                                  y = viz_data[x == eventdata$x, y],
-                                  colour = 'red')
+                    plot_data(params, db, type = "QTLs")
                     
                 })
             }

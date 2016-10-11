@@ -41,6 +41,7 @@ shinyUI(fluidPage(
         
         # ---- UI output e.g. plots ---- #
         # Dynamically generated based on user input.
-        uiOutput("main_panel")
+        uiOutput("gwas_panel"),
+        uiOutput("qtl_panel")
     )
 ))

@@ -372,3 +372,37 @@ display <- function (data, type = "GWAS") {
     return (layers)
 }
 
+plot_data <- function (params, db, type = "GWAS") {
+    
+    if (type == "GWAS") {
+        
+        p <- display(lookup_gwas(params, db))
+        viz <- ggplotly(p$base + p$scatter + p$facet,
+                        tooltip = c("a", "b", "c", "d", "y"),
+                        source = "gwas_source")
+    } else {
+        
+        # eventdata, used for linking the GWAS and QTL plots
+        # gets cursor position from the source (GWAS plot)
+        eventdata <- event_data("plotly_hover", source = "gwas_source")
+        
+        # create QTL plot, and extract QTL data for linked interaction
+        p <- display(lookup_qtl(params, db), type = type)
+        
+        viz <- p$base + p$scatter + p$facet
+        viz_data <- data.table(ggplot_build(viz)$data[[1]])
+        
+        # plot, adding a trace for the linked ineraction
+        viz <- ggplotly(viz,
+                        tooltip = c("a", "b", "c", "d", "y")) %>%
+            add_trace(x = eventdata$x,
+                      y = viz_data[x == eventdata$x, y],
+                      colour = 'red')
+        
+    }
+    
+    return (viz)
+    
+}
+
+
