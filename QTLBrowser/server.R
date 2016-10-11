@@ -17,7 +17,6 @@ shinyServer(function (input, output) {
     browser <- browser()
     db <- database()
     params <- parameters()
-    branch <- NULL
     
     # get lookup tables (these are small, and this avoids unneccessary DB calls later)
     info_traits <- lookup(db, "[dbo].[gwas_dataset_info]")
@@ -34,10 +33,10 @@ shinyServer(function (input, output) {
                                                 # (gwas: get trait; qtls: get dataset)
             # first, get the datasource:
             params$set("datasource", input$datasource)
-            branch <<- navigate(params$get("datasource"))
+            params$set("branch", navigate(params$get("datasource")))
 
             output$filters <- renderUI(
-                stage_one_filters(branch, info_traits[, trait])
+                stage_one_filters(params$get("branch"), info_traits[, trait])
             )
             
         } else if (browser$get() == 2) {        # stage two filters 
@@ -47,15 +46,49 @@ shinyServer(function (input, output) {
             params$sweep(input)
 
             output$filters <- renderUI(
-                stage_two_filters(branch, info_tissues[, smts], info_traits, params)
+                stage_two_filters(params$get("branch"), 
+                                  info_tissues[, smts], 
+                                  info_traits, params)
             )
 
-        } else if (browser$get() == 3) {
+        } else if (browser$get() == 3) {       # stage three filter: get gene / rsid target
             
             params$sweep(input)
             output$filters <- renderUI(
                 stage_three_filters(params)
             )
+        } else if (browser$get() == 4) {        # visualise data
+            
+            params$set("target", input$target)
+            output$main_panel <- renderUI(
+                shiny::tags$div(
+                    plotlyOutput("gwas_viz"),
+                    plotlyOutput("qtl_viz")
+                )
+            )
+            
+            if (!is.na(params$get("gwas_dataset"))) {
+                output$gwas_viz <- renderPlotly(
+                    display(lookup_gwas(params, db))
+                )
+            }
+            if (!is.na(params$get("qtl_dataset"))) {
+                output$qtl_viz <- renderPlotly(
+                    display(lookup_qtl(params, db), type = "qtls")
+                )
+            }
+            
+        } else {
+            
+            # reset the browser
+            output$main_panel <- renderUI({
+                shiny::tags$div(
+                    p("Please refresh the browser...")
+                )
+            })
+            output$filters <- renderUI(NULL)
+            
+            
         }
 
     })

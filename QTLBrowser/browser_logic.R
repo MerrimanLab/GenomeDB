@@ -4,11 +4,13 @@
 # Logic layer for GenomeDB, QTLBrowser. Contains all the business logic
 # necessary to update the user interface in response to user events.
 #
-# Divided into two sections:
+# Divided into three sections:
 #    DATA LOGIC LAYER:    
 #        contains the code necessary to get data from the database
 #    Business Logic Layer:
 #        contains the basic event-handling logic.
+#    Visualisation Layer:
+#        functions for the visualisation and rendering of data
 # Nick Burns
 # Oct 2016
 
@@ -17,7 +19,7 @@ library(plotly)
 library(RODBC)
 
 
-# --------------------------------------------------------------------------- #
+#### --------------------------------------------------------------------------- ####
 #
 #   DATA LOGIC LAYER                                      
 #
@@ -61,8 +63,62 @@ lookup <- function (db, query) {
     return (data.table(results))
 }
 
+# lookup_gwas()
+# Get GWAS results from GenomeDB. Allows for multiple datasets (via rbindlist / lapply)
+# Parameters:
+# -----------
+#     params (list): user-defined variables  
+#     db: an instance of the database() function above
+# Returns:
+# --------
+#     results (data.table): (chromosome, position, rsid, pvalue, trait, dataset)
+lookup_gwas <- function (params, db) {
+    query <- "exec dbo.get_gwas_region @feature = %s, @trait = %s, @dataset = %s"
+    db$open()
+    
+    results <- rbindlist(
+        lapply(params$get("gwas_dataset"),
+               function (d) {
+                   lcl_query <- sprintf(query, params$get("target"), params$get("trait"), d)
+                   data.table(db$query(lcl_query))
+               })
+    )
+    db$close()
+    
+    return (results)
+}
 
-# --------------------------------------------------------------------------- #
+# lookup_qtl()
+# Get QTL results from GenomeDB. Allows for multiple tissues (via rbindlist / lapply)
+# Parameters:
+# -----------
+#     params (list): user-defined variables  
+#     db: an instance of the database() function above
+# Returns:
+# --------
+#     results (data.table): (gene_symbol, smts, chromosome, position, rsid, pvalue, dataset)
+lookup_qtl <- function (params, db) {
+    
+    query <- "exec dbo.get_qtl_region @gene = %s, @tissue = %s, @dataset = %s"
+    db$open()
+    
+    results <- rbindlist(
+        lapply(params$get("tissue"), 
+               function (t) {
+                   lcl_query <- sprintf(query, 
+                                        params$get("target"), 
+                                        t, 
+                                        params$get("qtl_dataset"))
+                   data.table(db$query(lcl_query))}
+        )
+    )
+    db$close()
+    
+    return (results)
+}
+
+
+#### --------------------------------------------------------------------------- ####
 #
 #   Business logic layer                                      
 #
@@ -77,7 +133,6 @@ browser <- function () {
         set = function (x) stage <<- x
     )
 }
-
 
 # navigate()
 # parameters: 
@@ -110,12 +165,13 @@ parameters <- function () {
     
     # note: that these names match ui elements (and therefore input elements)
     params <- list(
-        "datasource"=NULL,           # GWAS or QTLs
-        "gwas_dataset"=NULL,         # e.g. Kottgen, UKBiobank,
-        "qtl_dataset"=NULL,          # e.g. GTEx, AutoImmune
-        "trait"=NULL,                # e.g. gout, diabetes
-        "tissue"=NULL,               # e.g. whole blood, etc.
-        "target"=NULL                # an RSID or gene symbol
+        "datasource"=NA,           # GWAS or QTLs
+        "gwas_dataset"=NA,         # e.g. Kottgen, UKBiobank,
+        "qtl_dataset"=NA,          # e.g. GTEx, AutoImmune
+        "trait"=NA,                # e.g. gout, diabetes
+        "tissue"=NA,               # e.g. whole blood, etc.
+        "target"=NA,               # an RSID or gene symbol
+        "branch"=NA
     )
     
     list(
@@ -129,7 +185,8 @@ parameters <- function () {
                        }
                    })
             },
-        print_ = function () print(params)
+        print_ = function () print(params),
+        reset = function () params[!is.na(params)] <<- NA
     )
 }
 
@@ -268,4 +325,44 @@ stage_three_filters <- function (params) {
 }
 
 
+#### --------------------------------------------------------------------------- ####
+#
+#   Visualisation Layer                                   
+#
+# --------------------------------------------------------------------------- #
+display <- function (data, type = "GWAS") {
+    
+    title <- sprintf("%s", ifelse(type == "GWAS", data[1, trait], data[1, gene_symbol]))
+    colour <- ifelse(type == "GWAS", "#2980b9", "#34495e")
+    facet <- ifelse(type == "GWAS", "~ dataset", "~ smts")
+    
+    base_layer <- function () {
+        # note addition aesthetics for the plotly tooltip
+        ggplot2::ggplot(data, aes(x = position / 1000000, 
+                                  y = -log10(pvalue),
+                                  a = rsid,
+                                  b = chromosome,
+                                  c = position,
+                                  d = dataset)) +
+            ggplot2::theme_minimal() +
+            ggplot2::xlab(sprintf("Chromosome %s (mb)", data[1, chromosome])) +
+            ggplot2::ylab("Association") +
+            ggplot2::ggtitle(title)
+    }
+    
+    points <- function (x) {
+        ggplot2::geom_point(colour = x, alpha = 0.5)
+    }
+    
+    facets <- function (x) {
+        ggplot2::facet_wrap(formula(x), ncol = 1)
+    }
+    
+    viz <- plotly::ggplotly(
+        base_layer() + points(colour) + facets(facet),
+        tooltip = c("a", "b", "c", "y", "d")
+    )
+    
+    return (viz)
+}
 
