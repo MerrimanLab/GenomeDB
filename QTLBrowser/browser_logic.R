@@ -73,7 +73,7 @@ lookup <- function (db, query) {
 # --------
 #     results (data.table): (chromosome, position, rsid, pvalue, trait, dataset)
 lookup_gwas <- function (params, db) {
-    query <- "exec dbo.get_gwas_region @feature = %s, @trait = %s, @dataset = %s"
+    query <- "exec dbo.get_gwas_region @feature = %s, @trait = %s, @dataset = %s, @delta = 500000"
     db$open()
     
     results <- rbindlist(
@@ -102,15 +102,28 @@ lookup_qtl <- function (params, db) {
     query <- "exec dbo.get_qtl_region @gene = %s, @tissue = %s, @dataset = %s"
     db$open()
     
+    # get top 6 tissues if required and replace tissue list with these
+    if (any(grepl("Top", params$get("tissue")))) {
+        
+        idx <- grep("Top", params$get("tissue"))
+        q <- "exec dbo.rank_tissues @gene = %s, @K=6;"
+        tissues <- db$query(sprintf(q, params$get("target")))
+        
+        tissues <- unique(tissues$smts)
+        
+    } else {
+        tissues <- params$get("tissue")
+    }
+    
     results <- rbindlist(
-        lapply(params$get("tissue"), 
+        lapply(tissues, 
                function (t) {
                    lcl_query <- sprintf(query, 
                                         params$get("target"), 
                                         t, 
                                         params$get("qtl_dataset"))
-                   data.table(db$query(lcl_query))}
-        )
+                   data.table(db$query(lcl_query))
+        }), fill = TRUE
     )
     db$close()
     
@@ -371,7 +384,7 @@ display <- function (data, db, type = "GWAS") {
     facets <- function () {
         
         facet <- ifelse(type == "GWAS", "~ dataset", "~ smts")
-        return (ggplot2::facet_wrap(formula(facet), ncol = 1))
+        return (ggplot2::facet_wrap(formula(facet)))
     }
     
     layers <- list(
@@ -394,7 +407,7 @@ display_genes <- function (plot, db) {
                               db)
     
     # this will alternate gene positions on the y-axis
-    gene_data[, y_pos := c(-5, -10)]
+    gene_data[, y_pos := seq(-5, -20, by = -4)]
     
     # this is a dirty hack to get the plotly tooltips to work
     # the gene data needs to have all the columns present in the tooltip
@@ -437,14 +450,14 @@ plot_data <- function (params, db, type = "GWAS") {
         p <- display_genes(pgwas, db)
         
         # linked interaction (highlights SNPs)
-        eventdata <- event_data("plotly_click", source = "source")
+        clickdata <- event_data("plotly_click", source = "source")
         gwas_data <- data.table(ggplot_build(pgwas)$data[[1]])
         
         viz <- ggplotly(p,
                         tooltip = c("a", "b", "c", "d", "y")) %>%
-            add_trace(x = eventdata$x,
-                      y = gwas_data[x == eventdata$x, y],
-                      colour = 'red')
+            add_trace(x = clickdata$x,
+                      y = gwas_data[x == clickdata$x, y],
+                      colour = 'red') 
     } else {
         
         # create QTL plot, and extract QTL data for linked interaction

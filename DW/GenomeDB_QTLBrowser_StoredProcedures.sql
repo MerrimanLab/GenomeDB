@@ -127,3 +127,34 @@ begin
 			or (gene_start < @start and gene_end > @end) );
 end;
 go
+
+
+/*
+ * rank_tissues
+ *     For a given gene, ranks tissues based on strength of association (pvalue) 
+ *     and returns the top k tissues
+*/
+if exists (select 1 from sys.sysobjects where name = 'rank_tissues' and xtype = 'p')
+	drop procedure dbo.rank_tissues;
+go
+create procedure dbo.rank_tissues
+	@gene nvarchar(64),
+	@K tinyint
+as
+begin
+	with tissue_rank as (
+		select 
+			Q.tissue, 
+			min(pvalue) as 'TissueScore',
+			rank() over (order by min(pvalue) asc) as 'TissueRank'
+		from fact_qtl Q
+			inner join dim_gene G on G.gene_id = Q.gene
+		where G.gene_symbol = @gene
+		group by Q.tissue
+	)
+	select T.smts, tr.TissueRank
+	from tissue_rank tr
+		inner join dim_tissue T on T.tissue_id = tr.tissue
+	where tr.TissueRank <= @K;
+end;
+go
