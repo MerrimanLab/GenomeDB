@@ -1,0 +1,24 @@
+PLINK v1.90b3.42 64-bit (20 Sep 2016)
+Options in effect:
+  --freq
+  --out ExampleAlleleFreq
+  --vcf Genotypes_CHR16_53500000-54000000.vcf
+
+Hostname: 061c0deef7b8
+Working directory: /home/jovyan/work/GenomeDB/Sandbox
+Start time: Wed Oct 26 22:51:15 2016
+
+Random number seed: 1477522275
+995 MB RAM detected; reserving 497 MB for main workspace.
+--vcf: ExampleAlleleFreq-temporary.bed + ExampleAlleleFreq-temporary.bim +
+ExampleAlleleFreq-temporary.fam written.
+13650 variants loaded from .bim file.
+2504 people (0 males, 0 females, 2504 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to ExampleAlleleFreq.nosex .
+Using 1 thread.
+Before main variant filters, 2504 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999874.
+--freq: Allele frequencies (founders only) written to ExampleAlleleFreq.frq .
+
+End time: Wed Oct 26 22:51:16 2016
